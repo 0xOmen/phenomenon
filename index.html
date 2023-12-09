@@ -1,0 +1,72 @@
+<!doctype html>
+
+<html>
+  <br /><br />
+  <img />
+  <br />
+  <head>
+    <title>Phenomenon</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+
+  <body>
+    <header>
+      <nav>
+        <ul>
+          <li>
+            <a href="index.html"> Main </a>
+          </li>
+        </ul>
+      </nav>
+      <button
+        id="connectButton"
+        type="button"
+        style="position: absolute; right: 0"
+      >
+        Connect Metamask
+      </button>
+    </header>
+    <strong>Phenomenon </strong> <br />
+    <strong> Make your Name </strong> <br /><br />
+
+    <button class="btn hidden" id="depositButton">Enter Game</button>
+    <button class="btn hidden" id="startGameButton">Start Game</button>
+    <button class="btn hidden" id="setGameButton">Set Game</button>
+
+    <table>
+      <thread>
+        <tr>
+          <th>Prophet</th>
+          <th>Status</th>
+          <th>Accolites</th>
+          <th>Last Move</th>
+        </tr>
+      </thread>
+      <tbody id="data-output"></tbody>
+    </table>
+    <br />
+    <strong id="player-id"> </strong>
+    <br />
+    <strong id="priest-data"></strong>
+    <br />
+    <button class="btn hidden" id="forceTurnButton">Force</button>
+    <br />
+    <button class="btn hidden" id="attemptMiracleButton">
+      Attempt Miracle
+    </button>
+    <button class="btn hidden" id="attemptSmiteButton">Attempt Smite</button>
+    <button class="btn hidden" id="setAllegiance">Set Allegiance</button>
+    <select class="hidden" name="targetNames" id="targetNames"></select>
+    <button class="btn hidden" id="accuseButton">Accuse of Blasphemy</button>
+    <br />
+    <button class="btn hidden" id="claimTickets">Claim Tickets</button>
+    <button class="btn hidden" id="reset">Reset Game</button>
+    <input
+      class="hidden"
+      type="text"
+      id="nextGamePlayers"
+      placeholder="less than 10"
+    />
+  </body>
+  <script src="./index.js" type="module"></script>
+</html>
