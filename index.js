@@ -224,6 +224,19 @@ const prophetNames = [
   "Ashur",
 ];
 
+const prophetImage = [
+  "./Baal2.jpg",
+  "./Cthulu1.jpg",
+  "./Odin2.jpg",
+  "./Athena2.jpg",
+  "./Marduk2.jpg",
+  "./Kek.jpg",
+  "./Vishnu1.jpg",
+  "./Zeus1.jpg",
+  "./Isis1.jpg",
+  "./Ashur2.jpg",
+];
+
 function getProphetData(
   prophet,
   prophetNum,
@@ -233,6 +246,7 @@ function getProphetData(
   firstAddress
 ) {
   const prophetName = getPlayerName(prophetNum, firstAddress);
+  const avatar = prophetImage[prophetNum];
   let color, prophetStatus;
   let border = "";
 
@@ -255,6 +269,7 @@ function getProphetData(
   }
 
   const answer = `<tr style="background-color: ${color}; outline: ${border}">
+            <td><img src=${avatar} width="40" height="40" ></img></td>
             <td style="text-align: center; padding-right: 5px; padding-left: 5px"> ${prophetName} </td>
             <td style="text-align: center; padding-right: 5px; padding-left: 5px"> ${prophetStatus} </td>
             <td style="text-align: center; padding-right: 5px; padding-left: 5px">  ${accolites}  </td>
