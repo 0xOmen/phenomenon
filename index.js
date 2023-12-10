@@ -19,6 +19,7 @@ const priestData = document.getElementById("priest-data");
 const claimTicketsButton = document.getElementById("claimTickets");
 const resetButton = document.getElementById("reset");
 const numberOfPlayers = document.getElementById("nextGamePlayers");
+const avatarImage = document.getElementById("avatarImage");
 
 enterGameButton.onclick = enterGame;
 startGameButton.onclick = startGame;
@@ -199,12 +200,16 @@ async function populateProphets() {
         prophetNum++;
       }
       if (gameStatus == 3) {
+        const nameOfTurn = getPlayerName(currentTurn, firstAddress);
+        playerName += ` and ${nameOfTurn} won`;
         gameEndButtons();
       }
       tableData.innerHTML = prophetOutput;
       playerId.innerHTML = `${playerName}`;
       targetNames.innerHTML = targets;
       priestData.innerHTML = _priestData;
+      //avatarImage.innerHTML = `<img src=${prophetImage[currentTurn]} width="100" height="100"></img>`;
+      avatarImage.src = `${prophetImage[currentTurn]}`;
     } catch (error) {
       console.log(error);
     }
