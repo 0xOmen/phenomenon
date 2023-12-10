@@ -175,8 +175,10 @@ async function populateProphets() {
             playerNumber = prophetNum;
             playerName = `You are ${getPlayerName(prophetNum, firstAddress)}`;
             if (currentTurn == prophetNum && gameStatus != 3) {
-              playerName += ` and it is your turn`;
-              updateTurnButtons();
+              if (totalTickets != 0) {
+                playerName += ` and it is your turn`;
+                updateTurnButtons();
+              }
             } else if (gameStatus == 3) {
             } else {
               const nameOfTurn = getPlayerName(currentTurn, firstAddress);
@@ -261,16 +263,15 @@ function getProphetData(
   } else if (prophet[1] == false) {
     color = "red";
     prophetStatus = "Dead";
-  } else if (prophetNum == currentTurn && gameStatus == 1) {
-    color = "green";
-    border = "solid thin";
-    prophetStatus = "Alive";
   } else if (prophet[2] == false) {
     color = "orange";
     prophetStatus = "In Jail";
   } else {
     color = "green";
     prophetStatus = "Alive";
+  }
+  if (prophetNum == currentTurn) {
+    border = "solid thin";
   }
 
   const answer = `<tr style="background-color: ${color}; outline: ${border}">
