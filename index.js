@@ -264,11 +264,17 @@ function getProphetData(
 }
 
 function getPlayerName(prophetNum, firstAddress) {
+  console.log(`firstAddress = ${firstAddress}`);
+  console.log(`prophetNum = ${prophetNum}`);
   if (isNaN(firstAddress)) {
-    return prophetNames[prophetNum];
+    console.log(`entered non number area`);
+    return prophetNames[parseInt(prophetNum)];
   } else {
-    let num = prophetNum + firstAddress;
-    if (num >= 10) num = num - 10;
+    let num = parseInt(prophetNum) + parseInt(firstAddress);
+    console.log(`entered number area`);
+    if (parseInt(num) >= 10) num = parseInt(num) - 10;
+
+    console.log(`num = ${num}`);
     return prophetNames[parseInt(num)];
   }
 }
