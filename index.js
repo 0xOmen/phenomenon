@@ -174,12 +174,14 @@ async function populateProphets() {
           if (prophet[0] == userAddress) {
             playerNumber = prophetNum;
             playerName = `You are ${getPlayerName(prophetNum, firstAddress)}`;
-            if (currentTurn == prophetNum && gameStatus != 3) {
+            if (currentTurn == prophetNum && gameStatus == 1) {
               if (totalTickets != 0) {
                 playerName += ` and it is your turn`;
-                updateTurnButtons();
+                updateTurnButtons(prophet[2]);
               }
             } else if (gameStatus == 3) {
+            } else if (gameStatus == 2) {
+              avatarImage.innerHTML = `<strong>Awaiting Chainlink Callback<strong/>`;
             } else {
               const nameOfTurn = getPlayerName(currentTurn, firstAddress);
               playerName += ` and it is ${nameOfTurn}'s turn`;
@@ -351,11 +353,11 @@ function updateForceButton(nameOfTurn) {
   targetNames.classList.add("hidden");
 }
 
-function updateTurnButtons() {
+function updateTurnButtons(isFree) {
   attemptMiracleButton.classList.remove("hidden");
   attemptSmiteButton.classList.remove("hidden");
   targetNames.classList.remove("hidden");
-  accuseButton.classList.remove("hidden");
+  if (isFree) accuseButton.classList.remove("hidden");
   forceTurnButton.classList.add("hidden");
 }
 
