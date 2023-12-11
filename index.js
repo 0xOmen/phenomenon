@@ -302,7 +302,7 @@ function getPlayerNameArrayNum(prophetNum, firstAddress) {
   console.log(`prophetNum = ${prophetNum}`);
   if (isNaN(firstAddress)) {
     console.log(`entered non number area`);
-    return prophetNames[parseInt(prophetNum)];
+    return parseInt(prophetNum);
   } else {
     let num = parseInt(prophetNum) + parseInt(firstAddress);
     console.log(`entered number area`);
