@@ -158,8 +158,8 @@ async function populateProphets() {
           if (prophetNum == 0) {
             currentTurn = await contract.currentProphetTurn();
             firstAddress = prophet[0].substring(2, 3);
-            prophetNumNameNum = getPlayerNameArrayNum(prophetNum, firstAddress);
           }
+          prophetNumNameNum = getPlayerNameArrayNum(prophetNum, firstAddress);
           currentTurnNameNum = getPlayerNameArrayNum(currentTurn, firstAddress);
           let accolites;
           if (totalTickets == 0) {
