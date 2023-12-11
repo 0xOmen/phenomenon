@@ -142,7 +142,7 @@ async function populateProphets() {
     let prophetOutput = "";
     let _priestData = "";
     let prophetNum = 0;
-    let currentTurn, targets;
+    let currentTurn, targets, prophetNumNameNum, currentTurnNameNum;
     let checkNextProphet = true;
     let firstAddress;
     const gameStatus = await contract.gameStatus();
@@ -158,7 +158,9 @@ async function populateProphets() {
           if (prophetNum == 0) {
             currentTurn = await contract.currentProphetTurn();
             firstAddress = prophet[0].substring(2, 3);
+            prophetNumNameNum = getPlayerNameArrayNum(prophetNum, firstAddress);
           }
+          currentTurnNameNum = getPlayerNameArrayNum(currentTurn, firstAddress);
           let accolites;
           if (totalTickets == 0) {
             accolites = 0;
@@ -168,12 +170,12 @@ async function populateProphets() {
             prophetNum,
             accolites,
             currentTurn,
-            gameStatus,
+            prophetNumNameNum,
             firstAddress
           );
           if (prophet[0] == userAddress) {
             playerNumber = prophetNum;
-            playerName = `You are ${getPlayerName(prophetNum, firstAddress)}`;
+            playerName = `You are ${prophetNames[prophetNumNameNum]}`;
             if (currentTurn == prophetNum && gameStatus == 1) {
               if (totalTickets != 0) {
                 playerName += ` and it is your turn`;
@@ -183,7 +185,7 @@ async function populateProphets() {
             } else if (gameStatus == 2) {
               avatarImage.innerHTML = `<strong>Awaiting Chainlink Callback<strong/>`;
             } else {
-              const nameOfTurn = getPlayerName(currentTurn, firstAddress);
+              const nameOfTurn = prophetNames[currentTurnNameNum];
               playerName += ` and it is ${nameOfTurn}'s turn`;
               updateForceButton(nameOfTurn);
               if (prophet[3] == 99) {
@@ -193,7 +195,7 @@ async function populateProphets() {
             }
           } else {
             if (prophet[1]) {
-              const name = getPlayerName(prophetNum, firstAddress);
+              const name = prophetNames[prophetNumNameNum];
               targets += `<option value="${prophetNum}">${name}</option>"`;
             }
           }
@@ -204,7 +206,7 @@ async function populateProphets() {
         prophetNum++;
       }
       if (gameStatus == 3) {
-        const nameOfTurn = getPlayerName(currentTurn, firstAddress);
+        const nameOfTurn = prophetNames[currentTurnNameNum];
         playerName += ` and ${nameOfTurn} won`;
         gameEndButtons();
       }
@@ -212,8 +214,7 @@ async function populateProphets() {
       playerId.innerHTML = `${playerName}`;
       targetNames.innerHTML = targets;
       priestData.innerHTML = _priestData;
-      //avatarImage.innerHTML = `<img src=${prophetImage[currentTurn]} width="100" height="100"></img>`;
-      avatarImage.src = `${prophetImage[currentTurn]}`;
+      avatarImage.src = `${prophetImage[currentTurnNameNum]}`;
     } catch (error) {
       console.log(error);
     }
@@ -251,11 +252,11 @@ function getProphetData(
   prophetNum,
   accolites,
   currentTurn,
-  gameStatus,
+  nameNum,
   firstAddress
 ) {
-  const prophetName = getPlayerName(prophetNum, firstAddress);
-  const avatar = prophetImage[prophetNum];
+  const prophetName = prophetNames[nameNum];
+  const avatar = prophetImage[nameNum];
   let color, prophetStatus;
   let border = "";
 
@@ -286,7 +287,7 @@ function getProphetData(
   return answer;
 }
 
-function getPlayerName(prophetNum, firstAddress) {
+function getPlayerNameArrayNum(prophetNum, firstAddress) {
   console.log(`firstAddress = ${firstAddress}`);
   console.log(`prophetNum = ${prophetNum}`);
   if (isNaN(firstAddress)) {
@@ -298,7 +299,7 @@ function getPlayerName(prophetNum, firstAddress) {
     if (parseInt(num) >= 10) num = parseInt(num) - 10;
 
     console.log(`num = ${num}`);
-    return prophetNames[parseInt(num)];
+    return parseInt(num);
   }
 }
 
