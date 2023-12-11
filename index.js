@@ -198,6 +198,9 @@ async function populateProphets() {
               const name = prophetNames[prophetNumNameNum];
               targets += `<option value="${prophetNum}">${name}</option>"`;
             }
+            if (gameStatus == 2) {
+              avatarImage.innerHTML = `<strong>Awaiting Chainlink Callback<strong/>`;
+            }
           }
         } catch (error) {
           checkNextProphet = false;
