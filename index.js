@@ -189,8 +189,6 @@ async function populateProphets() {
                 updateTurnButtons(prophet[2]);
               }
             } else if (gameStatus == 3) {
-            } else if (gameStatus == 2) {
-              avatarImage.innerHTML = `<strong>Awaiting Chainlink Callback<strong/>`;
             } else {
               const nameOfTurn = prophetNames[currentTurnNameNum];
               playerName += ` and it is ${nameOfTurn}'s turn`;
@@ -204,9 +202,6 @@ async function populateProphets() {
             if (prophet[1]) {
               const name = prophetNames[prophetNumNameNum];
               targets += `<option value="${prophetNum}">${name}</option>"`;
-            }
-            if (gameStatus == 2) {
-              avatarImage.innerHTML = `<strong>Awaiting Chainlink Callback<strong/>`;
             }
           }
         } catch (error) {
@@ -224,7 +219,17 @@ async function populateProphets() {
       playerId.innerHTML = `${playerName}`;
       targetNames.innerHTML = targets;
       priestData.innerHTML = _priestData;
-      avatarImage.src = `${prophetImage[currentTurnNameNum]}`;
+
+      if (gameStatus == 0) {
+        avatarImage.innerHTML = `<strong>Awaiting Game Start<strong/>`;
+        avatarImage.src = `chainlink1.jpg`;
+      } else if (gameStatus == 2) {
+        avatarImage.innerHTML = `<strong>Awaiting Oracle Response<strong/>`;
+        avatarImage.src = `chainlink1.jpg`;
+      } else {
+        avatarImage.src = `${prophetImage[currentTurnNameNum]}`;
+        avatarImage.innerHTML = `Current Turn`;
+      }
     } catch (error) {
       console.log(error);
     }
