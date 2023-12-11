@@ -20,6 +20,7 @@ const claimTicketsButton = document.getElementById("claimTickets");
 const resetButton = document.getElementById("reset");
 const numberOfPlayers = document.getElementById("nextGamePlayers");
 const avatarImage = document.getElementById("avatarImage");
+const avatarText = document.getElementById("avatarText");
 
 enterGameButton.onclick = enterGame;
 startGameButton.onclick = startGame;
@@ -221,14 +222,14 @@ async function populateProphets() {
       priestData.innerHTML = _priestData;
 
       if (gameStatus == 0) {
-        avatarImage.innerHTML = `<strong>Awaiting Game Start<strong/>`;
+        avatarText.innerHTML = `<strong>Awaiting Game Start<strong/>`;
         avatarImage.src = `chainlink1.jpg`;
       } else if (gameStatus == 2) {
-        avatarImage.innerHTML = `<strong>Awaiting Oracle Response<strong/>`;
+        avatarText.innerHTML = `<strong>Awaiting Oracle Response<strong/>`;
         avatarImage.src = `chainlink1.jpg`;
       } else {
         avatarImage.src = `${prophetImage[currentTurnNameNum]}`;
-        avatarImage.innerHTML = `Current Turn`;
+        avatarText.innerHTML = `Current Turn`;
       }
     } catch (error) {
       console.log(error);
