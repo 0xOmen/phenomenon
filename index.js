@@ -42,31 +42,38 @@ window.onload = (event) => {
 
 async function isConnected() {
   const accounts = await ethereum.request({ method: "eth_accounts" });
-  if (accounts.length) {
-    console.log(`You're connected to: ${accounts[0]}`);
-    connectButton.innerHTML = `${accounts[0].substring(
-      0,
-      6
-    )}...${accounts[0].substring(38, 43)} Connected`;
-    populateProphets();
-  } else {
-    console.log("Metamask is not connected");
-  }
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const { chainId } = await provider.getNetwork();
+  if (chainId == 80001) {
+    if (accounts.length) {
+      console.log(`You're connected to: ${accounts[0]}`);
+      connectButton.innerHTML = `${accounts[0].substring(
+        0,
+        6
+      )}...${accounts[0].substring(38, 43)} Connected`;
+      populateProphets();
+    } else {
+      console.log("Metamask is not connected");
+    }
+  } else connectButton.innerHTML = "Wrong Network";
 }
 
 async function connect() {
   if (typeof window.ethereum != undefined) {
     await window.ethereum.request({ method: "eth_requestAccounts" });
     const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
-    const userAddress = await signer.getAddress();
-    const accountConnected = `${userAddress.substring(
-      0,
-      6
-    )}...${userAddress.substring(38, 43)} Connected`;
-    connectButton.innerHTML = accountConnected;
-    console.log("Metamask connected");
-    populateProphets();
+    const { chainId } = await provider.getNetwork();
+    if (chainId == 80001) {
+      const signer = provider.getSigner();
+      const userAddress = await signer.getAddress();
+      const accountConnected = `${userAddress.substring(
+        0,
+        6
+      )}...${userAddress.substring(38, 43)} Connected`;
+      connectButton.innerHTML = accountConnected;
+      console.log("Metamask connected");
+      populateProphets();
+    } else connectButton.innerHTML = "Wrong Network";
   } else {
     connectButton.innerHTML = "Metamask not found";
   }
