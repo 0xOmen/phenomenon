@@ -15,7 +15,7 @@ async function isConnected() {
   const accounts = await ethereum.request({ method: "eth_accounts" });
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const { chainId } = await provider.getNetwork();
-  if (chainId == 80001) {
+  if (chainId == 8453 || chainId == 31337) {
     if (accounts.length) {
       console.log(`You're connected to: ${accounts[0]}`);
       connectButton.innerHTML = `${accounts[0].substring(
@@ -34,7 +34,7 @@ async function connect() {
     await window.ethereum.request({ method: "eth_requestAccounts" });
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const { chainId } = await provider.getNetwork();
-    if (chainId == 80001) {
+    if (chainId == 8453 || chainId == 31337) {
       const signer = provider.getSigner();
       const userAddress = await signer.getAddress();
       const accountConnected = `${userAddress.substring(
