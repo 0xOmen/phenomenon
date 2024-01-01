@@ -27,6 +27,7 @@ const ticketPrice = document.getElementById("ticketPrice");
 const ticketModal = document.getElementById("ticketModal");
 const buyTrxButton = document.getElementById("sendBuyTrx");
 const sellTrxButton = document.getElementById("sendSellTrx");
+const ticketValue = document.getElementById("ticketValue");
 
 const modal = document.querySelector(".modal");
 const overlay = document.querySelector(".overlay");
@@ -112,7 +113,7 @@ async function enterGame() {
         signer,
         hardhatWETHAddr,
         contractAddress,
-        100000000000000
+        ethers.utils.parseEther("100")
       );
       console.log("Approval check completed");
     } catch (error) {
@@ -143,6 +144,7 @@ async function checkAndSetAllowance(
   const erc20 = new ethers.Contract(tokenAddress, erc20_abi, wallet);
   const allowance = await erc20.allowance(userAddress, approvalAddress);
   if (allowance.lt(amount)) {
+    console.log("Needs Allowance increased");
     const approveTx = await erc20.approve(approvalAddress, amount, {
       gasPrice: await wallet.provider.getGasPrice(),
     });
@@ -155,11 +157,46 @@ async function checkAndSetAllowance(
   }
 }
 
-async function listenForStart() {
+async function listenForEvents() {
   if (typeof window.ethereum != undefined) {
-    //Finds node endpoint in Metamask
     contract._addEventListener
       .gameStarted()
+      .on("data", function (event) {
+        // Handle the received event data
+        console.log(event);
+        populateProphets();
+      })
+      .on("error", function (error) {
+        // Handle errors
+        console.error(error);
+      });
+
+    contract._addEventListener
+      .miracleAttempted()
+      .on("data", function (event) {
+        // Handle the received event data
+        console.log(event);
+        populateProphets();
+      })
+      .on("error", function (error) {
+        // Handle errors
+        console.error(error);
+      });
+
+    contract._addEventListener
+      .smiteAttempted()
+      .on("data", function (event) {
+        // Handle the received event data
+        console.log(event);
+        populateProphets();
+      })
+      .on("error", function (error) {
+        // Handle errors
+        console.error(error);
+      });
+
+    contract._addEventListener
+      .accusation()
       .on("data", function (event) {
         // Handle the received event data
         console.log(event);
@@ -183,9 +220,9 @@ async function populateProphets() {
     let firstAddress;
     const gameStatus = await contract.gameStatus();
     const totalTickets = await contract.totalTickets();
-    const game_number = await contract.GAME_NUMBER();
+    const game_number = await contract.s_gameNumber();
     const numberOfProphets = await contract.NUMBER_OF_PROPHETS();
-    updateButtons(gameStatus, totalTickets);
+    updateButtons(gameStatus, totalTickets, numberOfProphets);
     //If we make NUMBER_OR_PLAYERS public we can make this smarter
     try {
       for (let prophetNum = 0; prophetNum < numberOfProphets; prophetNum++) {
@@ -219,6 +256,7 @@ async function populateProphets() {
           if (prophet[0] == userAddress) {
             playerNumber = prophetNum;
             playerName = `You are ${prophetNames[prophetNumNameNum]}`;
+            updateButtons(gameStatus, totalTickets, numberOfProphets);
             if (currentTurn == prophetNum && gameStatus == 1) {
               playerName += ` and it is your turn`;
               updateTurnButtons(prophet[2]);
@@ -226,7 +264,10 @@ async function populateProphets() {
             } else {
               const nameOfTurn = prophetNames[currentTurnNameNum];
               playerName += ` and it is ${nameOfTurn}'s turn`;
-              updateForceButton(nameOfTurn);
+              if (gameStatus == 1) {
+                updateForceButton(nameOfTurn);
+                updatePriestButton();
+              }
               if (prophet[3] == 99) {
                 const playerTickets = await contract.ticketsToValhalla(
                   game_number,
@@ -243,7 +284,6 @@ async function populateProphets() {
                 }
               }
             }
-            updatePriestButton();
           }
           if (prophet[1]) {
             const name = prophetNames[prophetNumNameNum];
@@ -295,6 +335,7 @@ async function populateProphets() {
       } else {
         avatarImage.src = `${prophetImage[currentTurnNameNum]}`;
         avatarText.innerHTML = `Current Turn`;
+        //getTicketValue(totalTickets);
       }
     } catch (error) {
       console.log(error);
@@ -482,11 +523,21 @@ async function startGame() {
   }
 }
 
-function updateButtons(gameStatus, totalTickets) {
+async function updateButtons(gameStatus, totalTickets, numOfProphets) {
+  let filled;
+
   if (gameStatus == 0) {
-    enterGameButton.classList.remove("hidden");
-    if (totalTickets == 0) {
+    try {
+      filled = await contract.prophets(numOfProphets - 1);
+    } catch (error) {
+      console.log(error);
+    }
+    console.log(`filled = ${filled}`);
+    if (filled != null) {
+      console.log("entered start Game");
       startGameButton.classList.remove("hidden");
+    } else {
+      enterGameButton.classList.remove("hidden");
     }
   } else if (gameStatus == 1) {
     enterGameButton.classList.add("hidden");
@@ -581,7 +632,7 @@ async function accuse() {
 
 async function setAllegiance() {
   const target = document.getElementById("targetNames").value;
-  console.log(`target = ${target}`);
+  console.log(`target = ${target} and playerNumber = ${playerNumber}`);
   if (typeof window.ethereum != undefined) {
     try {
       const startTx = await contract.highPriest(playerNumber, target);
@@ -618,4 +669,12 @@ async function reset() {
       console.log(error);
     }
   }
+}
+
+async function getTicketValue(totalTickets) {
+  const tokenBalance = await contract.tokenBalance();
+  const tokensPerTicket = tokenBalance / totalTickets;
+  ticketValue.innerHTML = `Current Ticket Value: ${ethers.utils.formatEther(
+    tokensPerTicket
+  )} $MOREPOINTS`;
 }

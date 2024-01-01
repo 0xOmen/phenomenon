@@ -1,4 +1,4 @@
-export const contractAddress = "0x90118d110B07ABB82Ba8980D1c5cC96EeA810d2C";
+export const contractAddress = "0x6cffa31dd31cF649fb24AC7cEfE87579324bD89c";
 export const hardhatWETHAddr = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 export const abi = [
   {
@@ -182,7 +182,7 @@ export const abi = [
         type: "uint256",
       },
       {
-        indexed: false,
+        indexed: true,
         internalType: "uint256",
         name: "numTicketsBought",
         type: "uint256",
@@ -234,7 +234,7 @@ export const abi = [
       {
         indexed: true,
         internalType: "uint256",
-        name: "GAME_NUMBER",
+        name: "gameNumber",
         type: "uint256",
       },
     ],
@@ -381,7 +381,7 @@ export const abi = [
         type: "uint256",
       },
       {
-        indexed: false,
+        indexed: true,
         internalType: "uint256",
         name: "numTicketsSold",
         type: "uint256",
@@ -524,19 +524,6 @@ export const abi = [
       },
     ],
     name: "currentProphetTurn",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "GAME_NUMBER",
     outputs: [
       {
         internalType: "uint256",
@@ -720,6 +707,19 @@ export const abi = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "s_gameNumber",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "uint256",
@@ -733,6 +733,19 @@ export const abi = [
       },
     ],
     name: "ticketsToValhalla",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "tokenBalance",
     outputs: [
       {
         internalType: "uint256",

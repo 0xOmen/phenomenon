@@ -1,6 +1,6 @@
 //import ethers from "front end file"
 import { ethers } from "./ethers-5.6.esm.min.js";
-import { abi, contractAddress, polygonMumbaiLinkAddr } from "./constants.js";
+import { abi, contractAddress, hardhatWETHAddr } from "./constants.js";
 import { erc20_abi } from "./erc20-abi.js";
 
 const connectButton = document.getElementById("connectButton");
@@ -22,7 +22,6 @@ async function isConnected() {
         0,
         6
       )}...${accounts[0].substring(38, 43)} Connected`;
-      populateProphets();
     } else {
       console.log("Metamask is not connected");
     }
@@ -43,7 +42,6 @@ async function connect() {
       )}...${userAddress.substring(38, 43)} Connected`;
       connectButton.innerHTML = accountConnected;
       console.log("Metamask connected");
-      populateProphets();
     } else connectButton.innerHTML = "Wrong Network";
   } else {
     connectButton.innerHTML = "Metamask not found";
