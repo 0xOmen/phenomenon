@@ -27,6 +27,8 @@ const ticketPrice = document.getElementById("ticketPrice");
 const ticketModal = document.getElementById("ticketModal");
 const buyTrxButton = document.getElementById("sendBuyTrx");
 const sellTrxButton = document.getElementById("sendSellTrx");
+const errorModal = document.getElementById("errorModal");
+const errorOutput = document.getElementById("errorOutput");
 
 const modal = document.querySelector(".modal");
 const overlay = document.querySelector(".overlay");
@@ -121,6 +123,8 @@ async function enterGame() {
       await entryTx.wait();
     } catch (error) {
       console.log(error);
+      errorModal.classList.remove("hidden");
+      errorOutput.innerHTML = `error`;
     }
   }
 }
@@ -409,11 +413,13 @@ async function buyTicketTransaction() {
     try {
       const buyTx = await contract.getReligion(prophetNum, numTickets);
       await buyTx.wait();
+      closeModal();
     } catch (error) {
       console.log(error);
+      errorModal.classList.remove("hidden");
+      errorOutput.innerHTML = `error`;
     }
   }
-  closeModal();
 }
 
 async function sellTicketTransaction() {
@@ -423,11 +429,13 @@ async function sellTicketTransaction() {
     try {
       const buyTx = await contract.loseReligion(numTickets);
       await buyTx.wait();
+      closeModal();
     } catch (error) {
       console.log(error);
+      errorModal.classList.remove("hidden");
+      errorOutput.innerHTML = `error`;
     }
   }
-  closeModal();
 }
 
 const prophetNames = [
@@ -598,6 +606,8 @@ async function forceTurn() {
       await startTx.wait();
     } catch (error) {
       console.log(error);
+      errorModal.classList.remove("hidden");
+      errorOutput.innerHTML = `error`;
     }
   }
 }
@@ -609,6 +619,8 @@ async function attemptMiracle() {
       await startTx.wait();
     } catch (error) {
       console.log(error);
+      errorModal.classList.remove("hidden");
+      errorOutput.innerHTML = `error`;
     }
   }
 }
@@ -622,6 +634,8 @@ async function attemptSmite() {
       await startTx.wait();
     } catch (error) {
       console.log(error);
+      errorModal.classList.remove("hidden");
+      errorOutput.innerHTML = `error`;
     }
   }
 }
@@ -635,6 +649,8 @@ async function accuse() {
       await startTx.wait();
     } catch (error) {
       console.log(error);
+      errorModal.classList.remove("hidden");
+      errorOutput.innerHTML = `error`;
     }
   }
 }
@@ -648,6 +664,8 @@ async function setAllegiance() {
       await startTx.wait();
     } catch (error) {
       console.log(error);
+      errorModal.classList.remove("hidden");
+      errorOutput.innerHTML = `error`;
     }
   }
 }
@@ -660,6 +678,8 @@ async function claimTickets() {
       await startTx.wait();
     } catch (error) {
       console.log(error);
+      errorModal.classList.remove("hidden");
+      errorOutput.innerHTML = `error`;
     }
   }
 }
