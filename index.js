@@ -33,6 +33,7 @@ const errorOutput = document.getElementById("errorOutput");
 const modal = document.querySelector(".modal");
 const overlay = document.querySelector(".overlay");
 const closeModalBtn = document.querySelector(".btn-close");
+const closeErrorModal = document.getElementById("closeErorrModal");
 
 enterGameButton.onclick = enterGame;
 startGameButton.onclick = startGame;
@@ -46,6 +47,7 @@ resetButton.onclick = reset;
 buyTicketsButton.onclick = buyTicketModalUpdate;
 sellTicketsButton.onclick = sellTicketModalUpdate;
 closeModalBtn.onclick = closeModal;
+closeErrorModal.onclick = closeModal;
 buyTrxButton.onclick = buyTicketTransaction;
 sellTrxButton.onclick = sellTicketTransaction;
 
@@ -124,7 +126,7 @@ async function enterGame() {
     } catch (error) {
       console.log(error);
       errorModal.classList.remove("hidden");
-      errorOutput.innerHTML = `error`;
+      errorOutput.innerHTML = `${error}`;
     }
   }
 }
@@ -265,7 +267,7 @@ async function populateProphets() {
               playerName += ` and it is your turn`;
               updateTurnButtons(prophet[2]);
             } else if (gameStatus == 0) {
-              playerName += ` and you are waiting for more players to joing`;
+              playerName += ` and you are waiting for more players to join`;
             } else if (gameStatus == 3) {
             } else {
               nameOfTurn = prophetNames[currentTurnNameNum];
@@ -389,6 +391,7 @@ async function closeModal() {
   overlay.classList.add("hidden");
   buyTrxButton.classList.add("hidden");
   sellTrxButton.classList.add("hidden");
+  errorModal.classList.add("hidden");
 }
 
 async function buyTicketTransaction() {
@@ -417,7 +420,7 @@ async function buyTicketTransaction() {
     } catch (error) {
       console.log(error);
       errorModal.classList.remove("hidden");
-      errorOutput.innerHTML = `error`;
+      errorOutput.innerHTML = `${error}`;
     }
   }
 }
@@ -433,7 +436,7 @@ async function sellTicketTransaction() {
     } catch (error) {
       console.log(error);
       errorModal.classList.remove("hidden");
-      errorOutput.innerHTML = `error`;
+      errorOutput.innerHTML = `${error}`;
     }
   }
 }
@@ -607,7 +610,7 @@ async function forceTurn() {
     } catch (error) {
       console.log(error);
       errorModal.classList.remove("hidden");
-      errorOutput.innerHTML = `error`;
+      errorOutput.innerHTML = `${error}`;
     }
   }
 }
@@ -620,7 +623,7 @@ async function attemptMiracle() {
     } catch (error) {
       console.log(error);
       errorModal.classList.remove("hidden");
-      errorOutput.innerHTML = `error`;
+      errorOutput.innerHTML = `${error}`;
     }
   }
 }
@@ -635,7 +638,7 @@ async function attemptSmite() {
     } catch (error) {
       console.log(error);
       errorModal.classList.remove("hidden");
-      errorOutput.innerHTML = `error`;
+      errorOutput.innerHTML = `${error}`;
     }
   }
 }
@@ -650,7 +653,7 @@ async function accuse() {
     } catch (error) {
       console.log(error);
       errorModal.classList.remove("hidden");
-      errorOutput.innerHTML = `error`;
+      errorOutput.innerHTML = `${error}`;
     }
   }
 }
@@ -665,7 +668,7 @@ async function setAllegiance() {
     } catch (error) {
       console.log(error);
       errorModal.classList.remove("hidden");
-      errorOutput.innerHTML = `error`;
+      errorOutput.innerHTML = `${error}`;
     }
   }
 }
@@ -679,7 +682,7 @@ async function claimTickets() {
     } catch (error) {
       console.log(error);
       errorModal.classList.remove("hidden");
-      errorOutput.innerHTML = `error`;
+      errorOutput.innerHTML = `${error}`;
     }
   }
 }
