@@ -1,13 +1,117 @@
-export const contractAddress = "0x7FBb8F0c0Ed5962265024D023c125b0Fa65F8Aec";
-export const polygonMumbaiLinkAddr =
-  "0x326C977E6efc84E512bB9C30f76E30c160eD06FB";
+export const contractAddress = "0xDBD6c48913473F648f64d8E9fdDeead1F1734E22";
+export const hardhatWETHAddr = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 export const abi = [
   {
-    inputs: [],
-    name: "acceptOwnership",
-    outputs: [],
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_interval",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_entranceFee",
+        type: "uint256",
+      },
+      {
+        internalType: "uint16",
+        name: "_numProphets",
+        type: "uint16",
+      },
+      {
+        internalType: "address",
+        name: "_gameToken",
+        type: "address",
+      },
+    ],
     stateMutability: "nonpayable",
-    type: "function",
+    type: "constructor",
+  },
+  {
+    inputs: [],
+    name: "Game__AddressIsEliminated",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "Game__AlreadyRegistered",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "Game__Full",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "Game__NotAllowed",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "Game__NotEnoughTicketsOwned",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "Game__NotInProgress",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "Game__NotOpen",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "Game__OutOfTurn",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "Game__ProphetIsDead",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "Game__ProphetNotFree",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "Game__ProphetNumberError",
+    type: "error",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "bool",
+        name: "isSuccess",
+        type: "bool",
+      },
+      {
+        indexed: true,
+        internalType: "bool",
+        name: "targetIsAlive",
+        type: "bool",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "currentProphetTurn",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "_target",
+        type: "uint256",
+      },
+    ],
+    name: "accusation",
+    type: "event",
   },
   {
     inputs: [
@@ -36,72 +140,30 @@ export const abi = [
     type: "function",
   },
   {
-    inputs: [],
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_gameNumber",
+        type: "uint256",
+      },
+    ],
     name: "claimTickets",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
+    anonymous: false,
     inputs: [
       {
+        indexed: true,
         internalType: "uint256",
-        name: "_interval",
+        name: "nextProphetTurn",
         type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_entranceFee",
-        type: "uint256",
-      },
-      {
-        internalType: "uint16",
-        name: "_numProphets",
-        type: "uint16",
-      },
-      {
-        internalType: "address",
-        name: "_gameToken",
-        type: "address",
-      },
-      {
-        internalType: "string",
-        name: "_source",
-        type: "string",
-      },
-      {
-        internalType: "uint64",
-        name: "_subscriptionId",
-        type: "uint64",
-      },
-      {
-        internalType: "uint64",
-        name: "_functionSubscriptionId",
-        type: "uint64",
       },
     ],
-    stateMutability: "nonpayable",
-    type: "constructor",
-  },
-  {
-    inputs: [],
-    name: "Contract__OnlyOwner",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "EmptyArgs",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "EmptySecrets",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "EmptySource",
-    type: "error",
+    name: "currentTurn",
+    type: "event",
   },
   {
     inputs: [],
@@ -111,86 +173,88 @@ export const abi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "forceTurn",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "_target",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "numTicketsBought",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "totalPrice",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "sender",
+        type: "address",
+      },
+    ],
+    name: "gainReligion",
+    type: "event",
   },
   {
-    inputs: [],
-    name: "Game__AddressIsEliminated",
-    type: "error",
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "gameNumber",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "tokensPerTicket",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "currentProphetTurn",
+        type: "uint256",
+      },
+    ],
+    name: "gameEnded",
+    type: "event",
   },
   {
-    inputs: [],
-    name: "Game__AlreadyRegistered",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "Game__Full",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "Game__NoRandomNumber",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "Game__NotAllowed",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "Game__NotEnoughProphets",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "Game__NotEnoughTicketsOwned",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "Game__NotInProgress",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "Game__NotOpen",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "Game__OutOfTurn",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "Game__ProphetNotFree",
-    type: "error",
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "gameNumber",
+        type: "uint256",
+      },
+    ],
+    name: "gameStarted",
+    type: "event",
   },
   {
     inputs: [
       {
-        internalType: "bytes32",
-        name: "requestId",
-        type: "bytes32",
+        internalType: "uint256",
+        name: "_prophetNum",
+        type: "uint256",
       },
       {
-        internalType: "bytes",
-        name: "response",
-        type: "bytes",
-      },
-      {
-        internalType: "bytes",
-        name: "err",
-        type: "bytes",
+        internalType: "uint256",
+        name: "_ticketsToBuy",
+        type: "uint256",
       },
     ],
-    name: "handleOracleFulfillment",
+    name: "getReligion",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -199,7 +263,7 @@ export const abi = [
     inputs: [
       {
         internalType: "uint256",
-        name: "_prophetNum",
+        name: "_senderProphetNum",
         type: "uint256",
       },
       {
@@ -214,117 +278,49 @@ export const abi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "NoInlineSecrets",
-    type: "error",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "have",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "want",
-        type: "address",
-      },
-    ],
-    name: "OnlyCoordinatorCanFulfill",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "OnlyRouterCanFulfill",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "performMiracle",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
     inputs: [
       {
         internalType: "uint256",
-        name: "requestId",
+        name: "_ticketsToSell",
         type: "uint256",
       },
-      {
-        internalType: "uint256[]",
-        name: "randomWords",
-        type: "uint256[]",
-      },
     ],
-    name: "rawFulfillRandomWords",
+    name: "loseReligion",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint16",
-        name: "_numberOfPlayers",
-        type: "uint16",
-      },
-    ],
-    name: "reset",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "requestId",
-        type: "bytes32",
-      },
-    ],
-    name: "UnexpectedRequestID",
-    type: "error",
   },
   {
     anonymous: false,
     inputs: [
       {
         indexed: true,
-        internalType: "address",
-        name: "from",
-        type: "address",
+        internalType: "bool",
+        name: "isSuccess",
+        type: "bool",
       },
       {
         indexed: true,
-        internalType: "address",
-        name: "to",
-        type: "address",
+        internalType: "uint256",
+        name: "currentProphetTurn",
+        type: "uint256",
       },
     ],
-    name: "OwnershipTransferRequested",
+    name: "miracleAttempted",
     type: "event",
   },
   {
-    anonymous: false,
     inputs: [
       {
-        indexed: true,
-        internalType: "address",
-        name: "from",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "to",
-        type: "address",
+        internalType: "enum Phenomenon.GameState",
+        name: "_status",
+        type: "uint8",
       },
     ],
-    name: "OwnershipTransferred",
-    type: "event",
+    name: "ownerChangeGameState",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     inputs: [
@@ -350,75 +346,99 @@ export const abi = [
     type: "function",
   },
   {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "bytes32",
-        name: "id",
-        type: "bytes32",
-      },
-    ],
-    name: "RequestFulfilled",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "bytes32",
-        name: "id",
-        type: "bytes32",
-      },
-    ],
-    name: "RequestSent",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "bytes32",
-        name: "requestId",
-        type: "bytes32",
-      },
-      {
-        indexed: false,
-        internalType: "bytes",
-        name: "response",
-        type: "bytes",
-      },
-      {
-        indexed: false,
-        internalType: "bytes",
-        name: "err",
-        type: "bytes",
-      },
-    ],
-    name: "Response",
-    type: "event",
-  },
-  {
-    inputs: [
-      {
-        internalType: "string",
-        name: "_source",
-        type: "string",
-      },
-    ],
-    name: "setSource",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
     inputs: [],
-    name: "setStart",
+    name: "performMiracle",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "sender",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "gameNumber",
+        type: "uint256",
+      },
+    ],
+    name: "prophetEnteredGame",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "_target",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "numTicketsSold",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "totalPrice",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "sender",
+        type: "address",
+      },
+    ],
+    name: "religionLost",
+    type: "event",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint16",
+        name: "_numberOfPlayers",
+        type: "uint16",
+      },
+    ],
+    name: "reset",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "target",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "bool",
+        name: "isSuccess",
+        type: "bool",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "currentProphetTurn",
+        type: "uint256",
+      },
+    ],
+    name: "smiteAttempted",
+    type: "event",
   },
   {
     inputs: [],
@@ -428,17 +448,29 @@ export const abi = [
     type: "function",
   },
   {
+    anonymous: false,
     inputs: [
       {
-        internalType: "address",
-        name: "to",
-        type: "address",
+        indexed: true,
+        internalType: "uint256",
+        name: "ticketsClaimed",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "tokensSent",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "gameNumber",
+        type: "uint256",
       },
     ],
-    name: "transferOwnership",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
+    name: "ticketsClaimed",
+    type: "event",
   },
   {
     inputs: [
@@ -484,21 +516,14 @@ export const abi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "currentProphetTurn",
-    outputs: [
+    inputs: [
       {
         internalType: "uint256",
         name: "",
         type: "uint256",
       },
     ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "gameRound",
+    name: "currentProphetTurn",
     outputs: [
       {
         internalType: "uint256",
@@ -523,6 +548,43 @@ export const abi = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "getOwnerTokenBalance",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "supply",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+    ],
+    name: "getPrice",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "pure",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "uint256",
@@ -542,8 +604,14 @@ export const abi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "lastRequestIdVRF",
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "highPriestsByProphet",
     outputs: [
       {
         internalType: "uint256",
@@ -556,12 +624,36 @@ export const abi = [
   },
   {
     inputs: [],
-    name: "owner",
+    name: "NUMBER_OF_PROPHETS",
     outputs: [
+      {
+        internalType: "uint16",
+        name: "",
+        type: "uint16",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
       {
         internalType: "address",
         name: "",
         type: "address",
+      },
+    ],
+    name: "prophetList",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
       },
     ],
     stateMutability: "view",
@@ -615,95 +707,13 @@ export const abi = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "requestIdsVRF",
+    inputs: [],
+    name: "s_gameNumber",
     outputs: [
       {
         internalType: "uint256",
         name: "",
         type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "roleVRFSeed",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "s_lastFunctionError",
-    outputs: [
-      {
-        internalType: "bytes",
-        name: "",
-        type: "bytes",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "s_lastFunctionRequestId",
-    outputs: [
-      {
-        internalType: "bytes32",
-        name: "",
-        type: "bytes32",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "s_lastFunctionResponse",
-    outputs: [
-      {
-        internalType: "bytes",
-        name: "",
-        type: "bytes",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "s_requestsVRF",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "fulfilled",
-        type: "bool",
-      },
-      {
-        internalType: "bool",
-        name: "exists",
-        type: "bool",
       },
     ],
     stateMutability: "view",
@@ -723,6 +733,38 @@ export const abi = [
       },
     ],
     name: "ticketsToValhalla",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "tokenBalance",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "tokensPerTicket",
     outputs: [
       {
         internalType: "uint256",

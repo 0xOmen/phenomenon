@@ -1,8 +1,7 @@
 <!doctype html>
 
 <html>
-  <br /><br />
-  <img />
+  <br />
   <br />
   <head>
     <title>Phenomenon</title>
@@ -19,6 +18,16 @@
           <li>
             <a href="rules.html"> Rules </a>
           </li>
+          <li>
+            <a href="https://warpcast.com/~/channel/degen"
+              ><img src="./Farcaster.jpg" width="20" height="20"
+            /></a>
+          </li>
+          <li>
+            <a href="https://www.t.me/phenomenon_game"
+              ><img src="./telegramLogo.png" width="20" height="20"
+            />Forum</a>
+          </li>
         </ul>
       </nav>
       <button
@@ -29,17 +38,23 @@
         Connect Metamask
       </button>
     </header>
-    <strong>Phenomenon </strong> <br />
-    <strong> Become a Movement </strong><br/>
+  
+    <div><strong
+      >**Warning** This is a beta version of the game. The contract has a known
+      issue that can be leveraged by savvy blockchain users to increase, but not guarantee, their
+      chances of winning. Use at your own risk. Do NOT risk more than you can
+      afford to lose.</strong
+    ></div>
+    <br />
     <div>
       <strong>!!! Refresh page every 30 seconds !!!</strong><br/>
       <strong>This is a static website, refresh every 30 seconds while playing to stay up to date</strong>
     </div>
-    <br /><br />
+    <br />
 
-    <button class="btn hidden" id="depositButton">Enter Game: 0.0001 LINK</button>
+    <button class="btn hidden" id="depositButton">Enter Game: 100 DEGEN</button>
     <button class="btn hidden" id="startGameButton">Start Game</button>
-    <button class="btn hidden" id="setGameButton">Set Game</button>
+    <div id="gameNumber"></div>
 
     <table class="center" >
       <thread>
@@ -48,6 +63,8 @@
           <th>Prophet</th>
           <th>Status</th>
           <th>Accolites</th>
+          <th>High Priests</th>
+          <th>Win Value</th>
           <th>Last Move</th>
         </tr>
       </thread>
@@ -71,7 +88,37 @@
     <select class="hidden" name="targetNames" id="targetNames"></select>
     <button class="btn hidden" id="accuseButton">Accuse of Blasphemy</button>
     <br />
-    <button class="btn hidden" id="claimTickets">Claim Tickets</button>
+    <button class="btn hidden" id="buyButton">Buy Tickets</button>
+    <button class="btn hidden" id="sellButton">Sell Tickets</button>
+    <select class="hidden" name="ticketNames" id="ticketNames"></select>
+
+    <section class="modal hidden" id="ticketModal">
+      <div class="flex">
+          <button id="closeModal" class="btn-close">⨉</button>
+      </div>
+      <div>
+          <h3>Buy and Sell Tickets to Valhalla</h3>
+          <div id="ticketPrice"> </div>
+          <input type="amount" id="amount" placeholder="0" />
+      </div>
+
+      <button class="btn hidden" id="sendBuyTrx">Buy</button>
+      <button class="btn hidden" id="sendSellTrx">Sell</button>
+    </section>
+
+    <section class="modal hidden" id="errorModal">
+      <div class="flex">
+          <button id="closeErorrModal" class="btn-close">⨉</button>
+      </div>
+      <div>
+          <h3>Transaction Error</h3>
+          <div id="errorOutput"> </div>
+      </div>
+    </section>
+
+    <br /><br />
+    <button class="btn" id="claimTickets">Claim Tickets from Prior Game</button>
+    <input class="" id="claim" placeholder="game number" />
     <button class="btn hidden" id="reset">Reset Game</button>
     <input
       class="hidden"
@@ -79,6 +126,8 @@
       id="nextGamePlayers"
       placeholder="less than 10"
     />
+
+    <div class="overlay hidden"></div>
     <br /><br /><br /><br /><br /><br />
   </body>
   <script src="./index.js" type="module"></script>

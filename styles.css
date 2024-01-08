@@ -42,11 +42,18 @@ header * {
 display: inline; 
 }  
 header li {  
-margin: 20px;  
+margin: 20px; 
+padding-right: 10px; 
+padding-left: 10px 
 }  
 header li a {  
 color: rgb(252, 254, 254);  
 text-decoration: none; 
+margin: 0;
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
 } 
 table{
     text-align: center;
