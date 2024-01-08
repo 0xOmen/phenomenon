@@ -1,8 +1,7 @@
 <!doctype html>
 
 <html>
-  <br /><br />
-  <img />
+  <br />
   <br />
   <head>
     <title>Phenomenon</title>
@@ -20,9 +19,14 @@
             <a href="rules.html"> Rules </a>
           </li>
           <li>
+            <a href="https://warpcast.com/~/channel/degen"
+              ><img src="./Farcaster.jpg" width="20" height="20"
+            /></a>
+          </li>
+          <li>
             <a href="https://www.t.me/phenomenon_game"
               ><img src="./telegramLogo.png" width="20" height="20"
-            />Game Forum</a>
+            />Forum</a>
           </li>
         </ul>
       </nav>
@@ -34,22 +38,23 @@
         Connect Metamask
       </button>
     </header>
-    <strong>Phenomenon: Be part of the Phenomenon </strong><br/><br/>
-    <strong
+  
+    <div><strong
       >**Warning** This is a beta version of the game. The contract has a known
-      cheat that can be exploited by savvy blockchain users to increase their
+      issue that can be leveraged by savvy blockchain users to increase, but not guarantee, their
       chances of winning. Use at your own risk. Do NOT risk more than you can
       afford to lose.</strong
-    >
-    <br /><br/>
+    ></div>
+    <br />
     <div>
       <strong>!!! Refresh page every 30 seconds !!!</strong><br/>
       <strong>This is a static website, refresh every 30 seconds while playing to stay up to date</strong>
     </div>
-    <br /><br />
+    <br />
 
-    <button class="btn hidden" id="depositButton">Enter Game: 100 $MOREPOINTS</button>
+    <button class="btn hidden" id="depositButton">Enter Game: 100 DEGEN</button>
     <button class="btn hidden" id="startGameButton">Start Game</button>
+    <div id="gameNumber"></div>
 
     <table class="center" >
       <thread>
@@ -59,6 +64,7 @@
           <th>Status</th>
           <th>Accolites</th>
           <th>High Priests</th>
+          <th>Win Value</th>
           <th>Last Move</th>
         </tr>
       </thread>
@@ -101,7 +107,6 @@
     </section>
 
     <br /><br />
-    <strong id="ticketValue"></strong>
     <button class="btn" id="claimTickets">Claim Tickets from Prior Game</button>
     <input class="" id="claim" placeholder="game number" />
     <button class="btn hidden" id="reset">Reset Game</button>

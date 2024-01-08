@@ -27,14 +27,10 @@ const ticketPrice = document.getElementById("ticketPrice");
 const ticketModal = document.getElementById("ticketModal");
 const buyTrxButton = document.getElementById("sendBuyTrx");
 const sellTrxButton = document.getElementById("sendSellTrx");
-const ticketValue = document.getElementById("ticketValue");
 
 const modal = document.querySelector(".modal");
 const overlay = document.querySelector(".overlay");
 const closeModalBtn = document.querySelector(".btn-close");
-
-//sendBuyTrx.disabled = true;
-//sendSellTrx.disabled = true;
 
 enterGameButton.onclick = enterGame;
 startGameButton.onclick = startGame;
@@ -55,6 +51,7 @@ connectButton.onclick = connect;
 
 let playerNumber;
 let provider, signer, userAddress, contract;
+let lastAction = [];
 
 window.onload = (event) => {
   isConnected();
@@ -216,14 +213,16 @@ async function populateProphets() {
     let prophetOutput = "";
     let _priestData = "";
 
-    let currentTurn, targets, prophetNumNameNum, currentTurnNameNum;
+    let currentTurn, targets, prophetNumNameNum, currentTurnNameNum, nameOfTurn;
     let firstAddress;
     const gameStatus = await contract.gameStatus();
     const totalTickets = await contract.totalTickets();
+    const tokenBalance = await contract.tokenBalance();
     const game_number = await contract.s_gameNumber();
+    document.getElementById("gameNumber").innerHTML =
+      `Current Game Number: ${game_number}`;
     const numberOfProphets = await contract.NUMBER_OF_PROPHETS();
-    updateButtons(gameStatus, totalTickets, numberOfProphets);
-    //If we make NUMBER_OR_PLAYERS public we can make this smarter
+    updateButtons(gameStatus, false, numberOfProphets);
     try {
       for (let prophetNum = 0; prophetNum < numberOfProphets; prophetNum++) {
         let prophet;
@@ -251,22 +250,24 @@ async function populateProphets() {
             highPriests,
             currentTurn,
             prophetNumNameNum,
-            firstAddress
+            tokenBalance
           );
           if (prophet[0] == userAddress) {
             playerNumber = prophetNum;
             playerName = `You are ${prophetNames[prophetNumNameNum]}`;
-            updateButtons(gameStatus, totalTickets, numberOfProphets);
+            updateButtons(gameStatus, true, numberOfProphets);
+            //updatePriestButton();
             if (currentTurn == prophetNum && gameStatus == 1) {
               playerName += ` and it is your turn`;
               updateTurnButtons(prophet[2]);
+            } else if (gameStatus == 0) {
+              playerName += ` and you are waiting for more players to joing`;
             } else if (gameStatus == 3) {
             } else {
-              const nameOfTurn = prophetNames[currentTurnNameNum];
+              nameOfTurn = prophetNames[currentTurnNameNum];
               playerName += ` and it is ${nameOfTurn}'s turn`;
               if (gameStatus == 1) {
                 updateForceButton(nameOfTurn);
-                updatePriestButton();
               }
               if (prophet[3] == 99) {
                 const playerTickets = await contract.ticketsToValhalla(
@@ -294,11 +295,13 @@ async function populateProphets() {
         }
       }
       if (gameStatus == 3) {
-        const nameOfTurn = prophetNames[currentTurnNameNum];
+        nameOfTurn = prophetNames[currentTurnNameNum];
         playerName += ` and ${nameOfTurn} won`;
         gameEndButtons();
       }
       if (playerName == "You are not currently a prophet" && gameStatus == 1) {
+        nameOfTurn = prophetNames[currentTurnNameNum];
+        updateForceButton(nameOfTurn);
         const ticketsOwned = await contract.ticketsToValhalla(
           game_number,
           userAddress
@@ -320,7 +323,7 @@ async function populateProphets() {
           const target = `<option value="${allegiantTo}">${allegianceName}</option>"`;
           ticketManagementVisible(target, true);
         }
-      }
+      } else if (gameStatus == 1) updatePriestButton();
       tableData.innerHTML = prophetOutput;
       playerId.innerHTML = `${playerName}`;
       targetNames.innerHTML = targets;
@@ -335,7 +338,6 @@ async function populateProphets() {
       } else {
         avatarImage.src = `${prophetImage[currentTurnNameNum]}`;
         avatarText.innerHTML = `Current Turn`;
-        //getTicketValue(totalTickets);
       }
     } catch (error) {
       console.log(error);
@@ -461,19 +463,30 @@ function getProphetData(
   highPriests,
   currentTurn,
   nameNum,
-  firstAddress
+  tokenBalance
 ) {
   const prophetName = prophetNames[nameNum];
   const avatar = prophetImage[nameNum];
-  let color, prophetStatus;
+  let color, prophetStatus, tokensPerTicket;
   let border = "";
+  if (accolites + highPriests == 0) {
+    tokensPerTicket = (tokenBalance * 95) / 100;
+  } else {
+    tokensPerTicket =
+      (tokenBalance * 95) / (parseInt(accolites) + parseInt(highPriests)) / 100;
+  }
+  const stringTokensPerTicket = Math.round(
+    +ethers.utils.formatEther(tokensPerTicket.toString())
+  ).toString();
 
   if (prophet[3] == 99) {
     color = "purple";
     prophetStatus = "High Priest";
+    tokensPerTicket = 0;
   } else if (prophet[1] == false) {
     color = "red";
     prophetStatus = "Dead";
+    tokensPerTicket = 0;
   } else if (prophet[2] == false) {
     color = "orange";
     prophetStatus = "In Jail";
@@ -491,23 +504,18 @@ function getProphetData(
             <td style="text-align: center; padding-right: 5px; padding-left: 5px"> ${prophetStatus} </td>
             <td style="text-align: center; padding-right: 5px; padding-left: 5px">  ${accolites}  </td>
             <td style="text-align: center; padding-right: 5px; padding-left: 5px">  ${highPriests}  </td>
+            <td style="text-align: center; padding-right: 5px; padding-left: 5px">  ${stringTokensPerTicket}  </td>
             <td style="text-align: center; padding-right: 5px; padding-left: 5px"> Unknown </td>
         </tr>`;
   return answer;
 }
 
 function getPlayerNameArrayNum(prophetNum, firstAddress) {
-  console.log(`firstAddress = ${firstAddress}`);
-  console.log(`prophetNum = ${prophetNum}`);
   if (isNaN(firstAddress)) {
-    console.log(`entered non number area`);
     return parseInt(prophetNum);
   } else {
     let num = parseInt(prophetNum) + parseInt(firstAddress);
-    console.log(`entered number area`);
     if (parseInt(num) >= 10) num = parseInt(num) - 10;
-
-    console.log(`num = ${num}`);
     return parseInt(num);
   }
 }
@@ -523,7 +531,7 @@ async function startGame() {
   }
 }
 
-async function updateButtons(gameStatus, totalTickets, numOfProphets) {
+async function updateButtons(gameStatus, entered, numOfProphets) {
   let filled;
 
   if (gameStatus == 0) {
@@ -537,7 +545,8 @@ async function updateButtons(gameStatus, totalTickets, numOfProphets) {
       console.log("entered start Game");
       startGameButton.classList.remove("hidden");
     } else {
-      enterGameButton.classList.remove("hidden");
+      if (!entered) enterGameButton.classList.remove("hidden");
+      else enterGameButton.classList.add("hidden");
     }
   } else if (gameStatus == 1) {
     enterGameButton.classList.add("hidden");
@@ -669,12 +678,4 @@ async function reset() {
       console.log(error);
     }
   }
-}
-
-async function getTicketValue(totalTickets) {
-  const tokenBalance = await contract.tokenBalance();
-  const tokensPerTicket = tokenBalance / totalTickets;
-  ticketValue.innerHTML = `Current Ticket Value: ${ethers.utils.formatEther(
-    tokensPerTicket
-  )} $MOREPOINTS`;
 }
