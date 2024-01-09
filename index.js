@@ -114,7 +114,7 @@ async function enterGame() {
         signer,
         hardhatWETHAddr,
         contractAddress,
-        ethers.utils.parseEther("100")
+        ethers.utils.parseEther("10000")
       );
       console.log("Approval check completed");
     } catch (error) {
