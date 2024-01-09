@@ -297,6 +297,7 @@ async function populateProphets() {
             targets += `<option value="${prophetNum}">${name}</option>"`;
           }
         } catch (error) {
+          console.log(`${error}`);
           prophetNum += numberOfProphets;
         }
       }
@@ -487,7 +488,9 @@ function getProphetData(
       (tokenBalance * 95) / (parseInt(accolites) + parseInt(highPriests)) / 100;
   }
   const stringTokensPerTicket = Math.round(
-    +ethers.utils.formatEther(tokensPerTicket.toString())
+    +ethers.utils.formatEther(
+      tokensPerTicket.toLocaleString("fullwide", { useGrouping: false })
+    )
   ).toString();
 
   if (prophet[3] == 99) {

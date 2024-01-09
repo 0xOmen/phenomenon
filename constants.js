@@ -1,5 +1,5 @@
-export const contractAddress = "0xDBD6c48913473F648f64d8E9fdDeead1F1734E22";
-export const hardhatWETHAddr = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+export const contractAddress = "0x2dA1405B67A4C240b7e72C47AB6B9f53048cb978";
+export const hardhatWETHAddr = "0x4ed4E862860beD51a9570b96d89aF5E1B0Efefed";
 export const abi = [
   {
     inputs: [
@@ -92,13 +92,13 @@ export const abi = [
         type: "bool",
       },
       {
-        indexed: true,
+        indexed: false,
         internalType: "bool",
         name: "targetIsAlive",
         type: "bool",
       },
       {
-        indexed: false,
+        indexed: true,
         internalType: "uint256",
         name: "currentProphetTurn",
         type: "uint256",
@@ -135,6 +135,19 @@ export const abi = [
       },
     ],
     name: "attemptSmite",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
+    name: "changeOwner",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
