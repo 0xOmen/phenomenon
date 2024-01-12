@@ -53,8 +53,6 @@ sellTrxButton.onclick = sellTicketTransaction;
 
 connectButton.onclick = connect;
 
-listenForEvents();
-
 let playerNumber;
 let provider, signer, userAddress, contract;
 let lastAction = [];
@@ -78,7 +76,7 @@ async function isConnected() {
         6
       )}...${accounts[0].substring(38, 43)} Connected`;
       populateProphets();
-      //listenForEvents();
+      listenForEvents();
     } else {
       console.log("Metamask is not connected");
     }
@@ -101,7 +99,7 @@ async function connect() {
       connectButton.innerHTML = accountConnected;
       console.log("Metamask connected");
       populateProphets();
-      //listenForEvents();
+      listenForEvents();
     } else connectButton.innerHTML = "Change Network to Base";
   } else {
     connectButton.innerHTML = "Metamask not found";
