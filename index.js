@@ -76,6 +76,7 @@ async function isConnected() {
         6
       )}...${accounts[0].substring(38, 43)} Connected`;
       populateProphets();
+      listenForEvents();
     } else {
       console.log("Metamask is not connected");
     }
@@ -98,6 +99,7 @@ async function connect() {
       connectButton.innerHTML = accountConnected;
       console.log("Metamask connected");
       populateProphets();
+      listenForEvents();
     } else connectButton.innerHTML = "Change Network to Base";
   } else {
     connectButton.innerHTML = "Metamask not found";
@@ -162,8 +164,7 @@ async function checkAndSetAllowance(
 
 async function listenForEvents() {
   if (typeof window.ethereum != undefined) {
-    contract._addEventListener
-      .gameStarted()
+    contract._addEventListener.gameStarted
       .on("data", function (event) {
         // Handle the received event data
         console.log(event);
@@ -174,8 +175,7 @@ async function listenForEvents() {
         console.error(error);
       });
 
-    contract._addEventListener
-      .miracleAttempted()
+    contract._addEventListener.miracleAttempted
       .on("data", function (event) {
         // Handle the received event data
         console.log(event);
@@ -186,8 +186,7 @@ async function listenForEvents() {
         console.error(error);
       });
 
-    contract._addEventListener
-      .smiteAttempted()
+    contract._addEventListener.smiteAttempted
       .on("data", function (event) {
         // Handle the received event data
         console.log(event);
@@ -198,8 +197,7 @@ async function listenForEvents() {
         console.error(error);
       });
 
-    contract._addEventListener
-      .accusation()
+    contract._addEventListener.accusation
       .on("data", function (event) {
         // Handle the received event data
         console.log(event);
