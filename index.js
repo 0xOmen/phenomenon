@@ -53,6 +53,8 @@ sellTrxButton.onclick = sellTicketTransaction;
 
 connectButton.onclick = connect;
 
+listenForEvents();
+
 let playerNumber;
 let provider, signer, userAddress, contract;
 let lastAction = [];
