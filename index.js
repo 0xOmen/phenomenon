@@ -442,7 +442,7 @@ async function sellTicketTransaction() {
 
 const prophetNames = [
   "Baal",
-  "Cthulu",
+  "Cthulhu",
   "Odin",
   "Athena",
   "Marduk",
