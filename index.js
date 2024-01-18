@@ -461,6 +461,7 @@ function getProphetData(
   const avatar = prophetImage[nameNum];
   let color, prophetStatus, tokensPerTicket;
   let border = "";
+  let action = "unknown";
   if (accolites + highPriests == 0) {
     tokensPerTicket = (tokenBalance * 95) / 100;
   } else {
@@ -491,6 +492,9 @@ function getProphetData(
   if (prophetNum == currentTurn) {
     border = "solid thin";
   }
+  try {
+    action = lastAction[currentTurn].action;
+  } catch (error) {}
 
   const answer = `<tr style="background-color: ${color}; outline: ${border}">
             <td><img src=${avatar} width="40" height="40" ></img></td>
