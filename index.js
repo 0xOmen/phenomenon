@@ -503,7 +503,7 @@ function getProphetData(
             <td style="text-align: center; padding-right: 5px; padding-left: 5px">  ${accolites}  </td>
             <td style="text-align: center; padding-right: 5px; padding-left: 5px">  ${highPriests}  </td>
             <td style="text-align: center; padding-right: 5px; padding-left: 5px">  ${stringTokensPerTicket}  </td>
-            <td style="text-align: center; padding-right: 5px; padding-left: 5px"> ${lastAction[currentTurn].action} </td>
+            <td style="text-align: center; padding-right: 5px; padding-left: 5px"> ${action} </td>
         </tr>`;
   return answer;
 }
