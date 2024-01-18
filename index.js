@@ -164,49 +164,31 @@ async function checkAndSetAllowance(
 
 async function listenForEvents() {
   if (typeof window.ethereum != undefined) {
-    contract._addEventListener.gameStarted
-      .on("data", function (event) {
-        // Handle the received event data
-        console.log(event);
-        populateProphets();
-      })
-      .on("error", function (error) {
-        // Handle errors
-        console.error(error);
-      });
+    contract.on("prophetEnteredGame", (from, gameNumber, event) => {
+      let entryEvent = {
+        from: from,
+        gameNumber: gameNumber.toString(),
+        eventData: event,
+      };
+      console.log(JSON.stringify(entryEvent, null, 3));
+      const tracking = {
+        address: from,
+        action: "Entered Game",
+      };
+      lastAction.push(tracking);
+      populateProphets();
+    });
 
-    contract._addEventListener.miracleAttempted
-      .on("data", function (event) {
-        // Handle the received event data
-        console.log(event);
-        populateProphets();
-      })
-      .on("error", function (error) {
-        // Handle errors
-        console.error(error);
-      });
+    contract.on("miracleAttempted", (isSuccess, prophetNum, event) => {
+      let miracleEvent = {
+        success: isSuccess,
+        prophetNum: prophetNum.toString(),
+        eventData: event,
+      };
+      console.log(JSON.stringify(miracleEvent, null, 3));
 
-    contract._addEventListener.smiteAttempted
-      .on("data", function (event) {
-        // Handle the received event data
-        console.log(event);
-        populateProphets();
-      })
-      .on("error", function (error) {
-        // Handle errors
-        console.error(error);
-      });
-
-    contract._addEventListener.accusation
-      .on("data", function (event) {
-        // Handle the received event data
-        console.log(event);
-        populateProphets();
-      })
-      .on("error", function (error) {
-        // Handle errors
-        console.error(error);
-      });
+      populateProphets();
+    });
   }
 }
 
@@ -517,7 +499,7 @@ function getProphetData(
             <td style="text-align: center; padding-right: 5px; padding-left: 5px">  ${accolites}  </td>
             <td style="text-align: center; padding-right: 5px; padding-left: 5px">  ${highPriests}  </td>
             <td style="text-align: center; padding-right: 5px; padding-left: 5px">  ${stringTokensPerTicket}  </td>
-            <td style="text-align: center; padding-right: 5px; padding-left: 5px"> Unknown </td>
+            <td style="text-align: center; padding-right: 5px; padding-left: 5px"> ${lastAction[currentTurn].action} </td>
         </tr>`;
   return answer;
 }
