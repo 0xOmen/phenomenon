@@ -370,6 +370,12 @@ export const abi = [
     inputs: [
       {
         indexed: true,
+        internalType: "uint256",
+        name: "prophetNumber",
+        type: "uint256",
+      },
+      {
+        indexed: true,
         internalType: "address",
         name: "sender",
         type: "address",

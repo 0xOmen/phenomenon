@@ -53,9 +53,21 @@ sellTrxButton.onclick = sellTicketTransaction;
 
 connectButton.onclick = connect;
 
-let playerNumber;
+let playerNumber, firstAddress;
 let provider, signer, userAddress, contract;
-let lastAction = [];
+let lastAction = [
+  { address: "", action: "" },
+  { address: "", action: "" },
+  { address: "", action: "" },
+  { address: "", action: "" },
+  { address: "", action: "" },
+  { address: "", action: "" },
+  { address: "", action: "" },
+  { address: "", action: "" },
+  { address: "", action: "" },
+];
+
+avatarImage.innerHTML = "Connect MetaMask";
 
 window.onload = (event) => {
   isConnected();
@@ -75,8 +87,8 @@ async function isConnected() {
         0,
         6
       )}...${accounts[0].substring(38, 43)} Connected`;
-      populateProphets();
       listenForEvents();
+      populateProphets();
     } else {
       console.log("Metamask is not connected");
     }
@@ -98,8 +110,8 @@ async function connect() {
       )}...${userAddress.substring(38, 43)} Connected`;
       connectButton.innerHTML = accountConnected;
       console.log("Metamask connected");
-      populateProphets();
       listenForEvents();
+      populateProphets();
     } else connectButton.innerHTML = "Change Network to Base";
   } else {
     connectButton.innerHTML = "Metamask not found";
@@ -164,20 +176,55 @@ async function checkAndSetAllowance(
 
 async function listenForEvents() {
   if (typeof window.ethereum != undefined) {
-    contract.on("prophetEnteredGame", (from, gameNumber, event) => {
-      let entryEvent = {
-        from: from,
-        gameNumber: gameNumber.toString(),
-        eventData: event,
-      };
-      console.log(JSON.stringify(entryEvent, null, 3));
+    contract.on(
+      "accusation",
+      (isSuccess, targetIsAlive, prophetNum, target, event) => {
+        let accusationEvent = {
+          success: isSuccess,
+          targetIsAlive: targetIsAlive,
+          prophetNum: prophetNum.toString(),
+          target: target,
+          eventData: event,
+        };
+        console.log(JSON.stringify(accusationEvent, null, 5));
+        const targetName =
+          prophetNames[getPlayerNameArrayNum(target.toNumber(), firstAddress)];
+        if (isSuccess) {
+          lastAction[prophetNum.toNumber()].action =
+            `Successfully Accused ${targetName}`;
+        } else {
+          lastAction[prophetNum.toNumber()].action =
+            `Failed to Accuse ${targetName}`;
+
+          console.log(`failed ${JSON.stringify(lastAction)}`);
+        }
+
+        populateProphets();
+      }
+    );
+
+    contract.on(
+      "prophetEnteredGame",
+      (prophetNumber, from, gameNumber, event) => {
+        let entryEvent = {
+          prophetNumber: prophetNumber,
+          from: from,
+          gameNumber: gameNumber.toString(),
+          eventData: event,
+        };
+        console.log(JSON.stringify(entryEvent, null));
+        lastAction[prophetNumber.toNumber()].action = "Entered Game";
+        lastAction[prophetNumber.toNumber()].address = from;
+        /*
       const tracking = {
         address: from,
         action: "Entered Game",
       };
-      lastAction.push(tracking);
-      populateProphets();
-    });
+      lastAction.push(tracking);*/
+
+        populateProphets();
+      }
+    );
 
     contract.on("miracleAttempted", (isSuccess, prophetNum, event) => {
       let miracleEvent = {
@@ -186,6 +233,31 @@ async function listenForEvents() {
         eventData: event,
       };
       console.log(JSON.stringify(miracleEvent, null, 3));
+
+      if (isSuccess) {
+        lastAction[prophetNum.toNumber()].action = "Performed Miracle";
+      } else lastAction[prophetNum.toNumber()].action = "Failed Miracle";
+
+      populateProphets();
+    });
+
+    contract.on("smiteAttempted", (target, isSuccess, prophetNum, event) => {
+      let smiteEvent = {
+        target: target,
+        success: isSuccess,
+        prophetNum: prophetNum.toString(),
+        eventData: event,
+      };
+      console.log(JSON.stringify(smiteEvent, null, 4));
+      const targetName =
+        prophetNames[getPlayerNameArrayNum(prophetNum, firstAddress)];
+      if (isSuccess) {
+        lastAction[prophetNum.toNumber()].action =
+          `Successful Smite of ${targetName}`;
+      } else {
+        lastAction[prophetNum.toNumber()].action =
+          `Failed to Smite ${targetName}`;
+      }
 
       populateProphets();
     });
@@ -200,7 +272,6 @@ async function populateProphets() {
     let _priestData = "";
 
     let currentTurn, targets, prophetNumNameNum, currentTurnNameNum, nameOfTurn;
-    let firstAddress;
     const gameStatus = await contract.gameStatus();
     const totalTickets = await contract.totalTickets();
     const tokenBalance = await contract.tokenBalance();
@@ -468,11 +539,6 @@ function getProphetData(
     tokensPerTicket =
       (tokenBalance * 95) / (parseInt(accolites) + parseInt(highPriests)) / 100;
   }
-  const stringTokensPerTicket = Math.round(
-    +ethers.utils.formatEther(
-      tokensPerTicket.toLocaleString("fullwide", { useGrouping: false })
-    )
-  ).toString();
 
   if (prophet[3] == 99) {
     color = "purple";
@@ -493,8 +559,13 @@ function getProphetData(
     border = "solid thin";
   }
   try {
-    action = lastAction[currentTurn].action;
+    action = lastAction[prophetNum].action;
   } catch (error) {}
+  const stringTokensPerTicket = Math.round(
+    +ethers.utils.formatEther(
+      tokensPerTicket.toLocaleString("fullwide", { useGrouping: false })
+    )
+  ).toString();
 
   const answer = `<tr style="background-color: ${color}; outline: ${border}">
             <td><img src=${avatar} width="40" height="40" ></img></td>
