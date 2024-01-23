@@ -291,7 +291,7 @@ async function populateProphets() {
       for (let prophetNum = 0; prophetNum < numberOfProphets; prophetNum++) {
         let prophet;
         try {
-          prophet = await contcustomRPCContractract.prophets(prophetNum);
+          prophet = await customRPCContract.prophets(prophetNum);
           console.log(`prophet = ${prophet}`);
           if (prophetNum == 0) {
             currentTurn =
