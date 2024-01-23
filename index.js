@@ -3,7 +3,7 @@ import { ethers } from "./ethers-5.6.esm.min.js";
 import { abi, contractAddress, hardhatWETHAddr } from "./constants.js";
 import { erc20_abi } from "./erc20-abi.js";
 const customHttpProvider = new ethers.providers.JsonRpcProvider(
-  https://base-mainnet.g.alchemy.com/v2/jPdfaZPC-HsogX6z4yEpViscL-B2TuvC
+  "https://base-mainnet.g.alchemy.com/v2/jPdfaZPC-HsogX6z4yEpViscL-B2TuvC"
 );
 let customRPCContract = new ethers.Contract(
   contractAddress,
