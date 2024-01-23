@@ -2,6 +2,15 @@
 import { ethers } from "./ethers-5.6.esm.min.js";
 import { abi, contractAddress, hardhatWETHAddr } from "./constants.js";
 import { erc20_abi } from "./erc20-abi.js";
+import { ALCHEMY_BASE_RPC_URL } from "./.env";
+const customHttpProvider = new ethers.providers.JsonRpcProvider(
+  ALCHEMY_BASE_RPC_URL
+);
+let customRPCContract = new ethers.Contract(
+  contractAddress,
+  abi,
+  customHttpProvider
+);
 
 const connectButton = document.getElementById("connectButton");
 const enterGameButton = document.getElementById("depositButton");
@@ -70,6 +79,7 @@ let lastAction = [
 avatarImage.innerHTML = "Connect MetaMask";
 
 window.onload = (event) => {
+  populateProphets();
   isConnected();
 };
 
@@ -82,13 +92,13 @@ async function isConnected() {
       signer = provider.getSigner();
       userAddress = await signer.getAddress();
       contract = new ethers.Contract(contractAddress, abi, signer);
+      if (chainId == 31337) customRPCContract = contract;
       console.log(`You're connected to: ${accounts[0]}`);
       connectButton.innerHTML = `${accounts[0].substring(
         0,
         6
       )}...${accounts[0].substring(38, 43)} Connected`;
       listenForEvents();
-      populateProphets();
     } else {
       console.log("Metamask is not connected");
     }
@@ -104,6 +114,7 @@ async function connect() {
       signer = provider.getSigner();
       userAddress = await signer.getAddress();
       contract = new ethers.Contract(contractAddress, abi, signer);
+      if (chainId == 31337) customRPCContract = contract;
       const accountConnected = `${userAddress.substring(
         0,
         6
@@ -176,7 +187,7 @@ async function checkAndSetAllowance(
 
 async function listenForEvents() {
   if (typeof window.ethereum != undefined) {
-    contract.on(
+    customRPCContract.on(
       "accusation",
       (isSuccess, targetIsAlive, prophetNum, target, event) => {
         let accusationEvent = {
@@ -203,7 +214,7 @@ async function listenForEvents() {
       }
     );
 
-    contract.on(
+    customRPCContract.on(
       "prophetEnteredGame",
       (prophetNumber, from, gameNumber, event) => {
         let entryEvent = {
@@ -215,18 +226,12 @@ async function listenForEvents() {
         console.log(JSON.stringify(entryEvent, null));
         lastAction[prophetNumber.toNumber()].action = "Entered Game";
         lastAction[prophetNumber.toNumber()].address = from;
-        /*
-      const tracking = {
-        address: from,
-        action: "Entered Game",
-      };
-      lastAction.push(tracking);*/
 
         populateProphets();
       }
     );
 
-    contract.on("miracleAttempted", (isSuccess, prophetNum, event) => {
+    customRPCContract.on("miracleAttempted", (isSuccess, prophetNum, event) => {
       let miracleEvent = {
         success: isSuccess,
         prophetNum: prophetNum.toString(),
@@ -241,26 +246,29 @@ async function listenForEvents() {
       populateProphets();
     });
 
-    contract.on("smiteAttempted", (target, isSuccess, prophetNum, event) => {
-      let smiteEvent = {
-        target: target,
-        success: isSuccess,
-        prophetNum: prophetNum.toString(),
-        eventData: event,
-      };
-      console.log(JSON.stringify(smiteEvent, null, 4));
-      const targetName =
-        prophetNames[getPlayerNameArrayNum(prophetNum, firstAddress)];
-      if (isSuccess) {
-        lastAction[prophetNum.toNumber()].action =
-          `Successful Smite of ${targetName}`;
-      } else {
-        lastAction[prophetNum.toNumber()].action =
-          `Failed to Smite ${targetName}`;
-      }
+    customRPCContract.on(
+      "smiteAttempted",
+      (target, isSuccess, prophetNum, event) => {
+        let smiteEvent = {
+          target: target,
+          success: isSuccess,
+          prophetNum: prophetNum.toString(),
+          eventData: event,
+        };
+        console.log(JSON.stringify(smiteEvent, null, 4));
+        const targetName =
+          prophetNames[getPlayerNameArrayNum(prophetNum, firstAddress)];
+        if (isSuccess) {
+          lastAction[prophetNum.toNumber()].action =
+            `Successful Smite of ${targetName}`;
+        } else {
+          lastAction[prophetNum.toNumber()].action =
+            `Failed to Smite ${targetName}`;
+        }
 
-      populateProphets();
-    });
+        populateProphets();
+      }
+    );
   }
 }
 
@@ -272,22 +280,23 @@ async function populateProphets() {
     let _priestData = "";
 
     let currentTurn, targets, prophetNumNameNum, currentTurnNameNum, nameOfTurn;
-    const gameStatus = await contract.gameStatus();
-    const totalTickets = await contract.totalTickets();
-    const tokenBalance = await contract.tokenBalance();
-    const game_number = await contract.s_gameNumber();
+    const gameStatus = await customRPCContract.gameStatus();
+    const totalTickets = await customRPCContract.totalTickets();
+    const tokenBalance = await customRPCContract.tokenBalance();
+    const game_number = await customRPCContract.s_gameNumber();
     document.getElementById("gameNumber").innerHTML =
       `Current Game Number: ${game_number}`;
-    const numberOfProphets = await contract.NUMBER_OF_PROPHETS();
+    const numberOfProphets = await customRPCContract.NUMBER_OF_PROPHETS();
     updateButtons(gameStatus, false, numberOfProphets);
     try {
       for (let prophetNum = 0; prophetNum < numberOfProphets; prophetNum++) {
         let prophet;
         try {
-          prophet = await contract.prophets(prophetNum);
+          prophet = await contcustomRPCContractract.prophets(prophetNum);
           console.log(`prophet = ${prophet}`);
           if (prophetNum == 0) {
-            currentTurn = await contract.currentProphetTurn(game_number);
+            currentTurn =
+              await customRPCContract.currentProphetTurn(game_number);
             firstAddress = prophet[0].substring(2, 3);
           }
           prophetNumNameNum = getPlayerNameArrayNum(prophetNum, firstAddress);
@@ -297,8 +306,9 @@ async function populateProphets() {
             accolites = 0;
             highPriests = 0;
           } else {
-            accolites = await contract.accolites(prophetNum);
-            highPriests = await contract.highPriestsByProphet(prophetNum);
+            accolites = await customRPCContract.accolites(prophetNum);
+            highPriests =
+              await customRPCContract.highPriestsByProphet(prophetNum);
           }
           prophetOutput += getProphetData(
             prophet,
@@ -327,14 +337,14 @@ async function populateProphets() {
                 updateForceButton(nameOfTurn);
               }
               if (prophet[3] == 99) {
-                const playerTickets = await contract.ticketsToValhalla(
+                const playerTickets = await customRPCContract.ticketsToValhalla(
                   game_number,
                   userAddress
                 );
                 if (playerTickets == 0) {
                   _priestData = `You are not following a prophet`;
                 } else {
-                  const allegianceNum = await contract.allegiance(
+                  const allegianceNum = await customRPCContract.allegiance(
                     game_number,
                     userAddress
                   );
@@ -360,7 +370,7 @@ async function populateProphets() {
       if (playerName == "You are not currently a prophet" && gameStatus == 1) {
         nameOfTurn = prophetNames[currentTurnNameNum];
         updateForceButton(nameOfTurn);
-        const ticketsOwned = await contract.ticketsToValhalla(
+        const ticketsOwned = await customRPCContract.ticketsToValhalla(
           game_number,
           userAddress
         );
@@ -368,7 +378,7 @@ async function populateProphets() {
           playerName += ` and you own ${ticketsOwned} tickets`;
           ticketManagementVisible(targets, false);
         } else {
-          const allegiantTo = await contract.allegiance(
+          const allegiantTo = await customRPCContract.allegiance(
             game_number,
             userAddress
           );
@@ -411,10 +421,10 @@ async function ticketManagementVisible(priests, canSell) {
 }
 
 async function buyTicketModalUpdate() {
-  const accolites = await contract.accolites(
+  const accolites = await customRPCContract.accolites(
     document.getElementById("ticketNames").value
   );
-  const nextTicketPrice = await contract.getPrice(accolites, 1);
+  const nextTicketPrice = await customRPCContract.getPrice(accolites, 1);
   console.log(nextTicketPrice);
   ticketPrice.innerHTML = `Next ticket price is ${ethers.utils.formatEther(
     nextTicketPrice
@@ -425,10 +435,10 @@ async function buyTicketModalUpdate() {
 }
 
 async function sellTicketModalUpdate() {
-  const accolites = await contract.accolites(
+  const accolites = await customRPCContract.accolites(
     document.getElementById("ticketNames").value
   );
-  const nextTicketPrice = await contract.getPrice(accolites - 1, 1);
+  const nextTicketPrice = await customRPCContract.getPrice(accolites - 1, 1);
   console.log(nextTicketPrice);
   ticketPrice.innerHTML = `Next ticket price is ${ethers.utils.formatEther(
     nextTicketPrice
@@ -449,8 +459,8 @@ async function closeModal() {
 async function buyTicketTransaction() {
   const numTickets = document.getElementById("amount").value;
   const prophetNum = document.getElementById("ticketNames").value;
-  const accolites = await contract.accolites(prophetNum);
-  const totalPrice = await contract.getPrice(accolites, numTickets);
+  const accolites = await customRPCContract.accolites(prophetNum);
+  const totalPrice = await customRPCContract.getPrice(accolites, numTickets);
   console.log(`Checking erc20 allowance of ${hardhatWETHAddr}`);
   if (typeof window.ethereum != undefined) {
     try {
@@ -482,8 +492,8 @@ async function sellTicketTransaction() {
   if (typeof window.ethereum != undefined) {
     console.log(`Selling ${numTickets} Tickets`);
     try {
-      const buyTx = await contract.loseReligion(numTickets);
-      await buyTx.wait();
+      const sellTx = await contract.loseReligion(numTickets);
+      await sellTx.wait();
       closeModal();
     } catch (error) {
       console.log(error);
@@ -605,7 +615,7 @@ async function updateButtons(gameStatus, entered, numOfProphets) {
 
   if (gameStatus == 0) {
     try {
-      filled = await contract.prophets(numOfProphets - 1);
+      filled = await customRPCContract.prophets(numOfProphets - 1);
     } catch (error) {
       console.log(error);
     }
