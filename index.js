@@ -218,7 +218,7 @@ async function listenForEvents() {
       }
     );
 
-    customRPCContract.on(
+    wsContract.on(
       "prophetEnteredGame",
       (prophetNumber, from, gameNumber, event) => {
         let entryEvent = {
@@ -235,7 +235,7 @@ async function listenForEvents() {
       }
     );
 
-    customRPCContract.on("miracleAttempted", (isSuccess, prophetNum, event) => {
+    wsContract.on("miracleAttempted", (isSuccess, prophetNum, event) => {
       let miracleEvent = {
         success: isSuccess,
         prophetNum: prophetNum.toString(),
@@ -250,29 +250,26 @@ async function listenForEvents() {
       populateProphets();
     });
 
-    customRPCContract.on(
-      "smiteAttempted",
-      (target, isSuccess, prophetNum, event) => {
-        let smiteEvent = {
-          target: target,
-          success: isSuccess,
-          prophetNum: prophetNum.toString(),
-          eventData: event,
-        };
-        console.log(JSON.stringify(smiteEvent, null, 4));
-        const targetName =
-          prophetNames[getPlayerNameArrayNum(prophetNum, firstAddress)];
-        if (isSuccess) {
-          lastAction[prophetNum.toNumber()].action =
-            `Successful Smite of ${targetName}`;
-        } else {
-          lastAction[prophetNum.toNumber()].action =
-            `Failed to Smite ${targetName}`;
-        }
-
-        populateProphets();
+    wsContract.on("smiteAttempted", (target, isSuccess, prophetNum, event) => {
+      let smiteEvent = {
+        target: target,
+        success: isSuccess,
+        prophetNum: prophetNum.toString(),
+        eventData: event,
+      };
+      console.log(JSON.stringify(smiteEvent, null, 4));
+      const targetName =
+        prophetNames[getPlayerNameArrayNum(prophetNum, firstAddress)];
+      if (isSuccess) {
+        lastAction[prophetNum.toNumber()].action =
+          `Successful Smite of ${targetName}`;
+      } else {
+        lastAction[prophetNum.toNumber()].action =
+          `Failed to Smite ${targetName}`;
       }
-    );
+
+      populateProphets();
+    });
   }
 }
 
