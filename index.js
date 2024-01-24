@@ -189,14 +189,12 @@ async function checkAndSetAllowance(
   }
 }
 
-const init = async () => {
+async function listenForEvents() {
   webSocketProvider.on("block", async (blockNumber) => {
     // This line of code listens to the block mining and every time a block is mined, it will return blocknumber.
     console.log(`blockNumber = ${blockNumber}`);
   });
-};
 
-async function listenForEvents() {
   if (typeof window.ethereum != undefined) {
     wsContract.on(
       "accusation",
