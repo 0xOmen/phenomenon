@@ -192,90 +192,94 @@ async function checkAndSetAllowance(
 async function listenForEvents() {
   webSocketProvider.on("block", async (blockNumber) => {
     // This line of code listens to the block mining and every time a block is mined, it will return blocknumber.
-    console.log(`blockNumber = ${blockNumber}`);
-  });
 
-  if (typeof window.ethereum != undefined) {
-    wsContract.on(
-      "accusation",
-      (isSuccess, targetIsAlive, prophetNum, target, event) => {
-        let accusationEvent = {
-          success: isSuccess,
-          targetIsAlive: targetIsAlive,
-          prophetNum: prophetNum.toString(),
-          target: target,
-          eventData: event,
-        };
-        console.log(JSON.stringify(accusationEvent, null, 5));
-        const targetName =
-          prophetNames[getPlayerNameArrayNum(target.toNumber(), firstAddress)];
-        if (isSuccess) {
-          lastAction[prophetNum.toNumber()].action =
-            `Successfully Accused ${targetName}`;
-        } else {
-          lastAction[prophetNum.toNumber()].action =
-            `Failed to Accuse ${targetName}`;
+    if (typeof window.ethereum != undefined) {
+      wsContract.on(
+        "accusation",
+        (isSuccess, targetIsAlive, prophetNum, target, event) => {
+          let accusationEvent = {
+            success: isSuccess,
+            targetIsAlive: targetIsAlive,
+            prophetNum: prophetNum.toString(),
+            target: target,
+            eventData: event,
+          };
+          console.log(JSON.stringify(accusationEvent, null, 5));
+          const targetName =
+            prophetNames[
+              getPlayerNameArrayNum(target.toNumber(), firstAddress)
+            ];
+          if (isSuccess) {
+            lastAction[prophetNum.toNumber()].action =
+              `Successfully Accused ${targetName}`;
+          } else {
+            lastAction[prophetNum.toNumber()].action =
+              `Failed to Accuse ${targetName}`;
 
-          console.log(`failed ${JSON.stringify(lastAction)}`);
+            console.log(`failed ${JSON.stringify(lastAction)}`);
+          }
+
+          populateProphets();
         }
+      );
 
-        populateProphets();
-      }
-    );
+      wsContract.on(
+        "prophetEnteredGame",
+        (prophetNumber, from, gameNumber, event) => {
+          let entryEvent = {
+            prophetNumber: prophetNumber,
+            from: from,
+            gameNumber: gameNumber.toString(),
+            eventData: event,
+          };
+          console.log(JSON.stringify(entryEvent, null));
+          lastAction[prophetNumber.toNumber()].action = "Entered Game";
+          lastAction[prophetNumber.toNumber()].address = from;
 
-    wsContract.on(
-      "prophetEnteredGame",
-      (prophetNumber, from, gameNumber, event) => {
-        let entryEvent = {
-          prophetNumber: prophetNumber,
-          from: from,
-          gameNumber: gameNumber.toString(),
+          populateProphets();
+        }
+      );
+
+      wsContract.on("miracleAttempted", (isSuccess, prophetNum, event) => {
+        let miracleEvent = {
+          success: isSuccess,
+          prophetNum: prophetNum.toString(),
           eventData: event,
         };
-        console.log(JSON.stringify(entryEvent, null));
-        lastAction[prophetNumber.toNumber()].action = "Entered Game";
-        lastAction[prophetNumber.toNumber()].address = from;
+        console.log(JSON.stringify(miracleEvent, null, 3));
+
+        if (isSuccess) {
+          lastAction[prophetNum.toNumber()].action = "Performed Miracle";
+        } else lastAction[prophetNum.toNumber()].action = "Failed Miracle";
 
         populateProphets();
-      }
-    );
+      });
 
-    wsContract.on("miracleAttempted", (isSuccess, prophetNum, event) => {
-      let miracleEvent = {
-        success: isSuccess,
-        prophetNum: prophetNum.toString(),
-        eventData: event,
-      };
-      console.log(JSON.stringify(miracleEvent, null, 3));
+      wsContract.on(
+        "smiteAttempted",
+        (target, isSuccess, prophetNum, event) => {
+          let smiteEvent = {
+            target: target,
+            success: isSuccess,
+            prophetNum: prophetNum.toString(),
+            eventData: event,
+          };
+          console.log(JSON.stringify(smiteEvent, null, 4));
+          const targetName =
+            prophetNames[getPlayerNameArrayNum(prophetNum, firstAddress)];
+          if (isSuccess) {
+            lastAction[prophetNum.toNumber()].action =
+              `Successful Smite of ${targetName}`;
+          } else {
+            lastAction[prophetNum.toNumber()].action =
+              `Failed to Smite ${targetName}`;
+          }
 
-      if (isSuccess) {
-        lastAction[prophetNum.toNumber()].action = "Performed Miracle";
-      } else lastAction[prophetNum.toNumber()].action = "Failed Miracle";
-
-      populateProphets();
-    });
-
-    wsContract.on("smiteAttempted", (target, isSuccess, prophetNum, event) => {
-      let smiteEvent = {
-        target: target,
-        success: isSuccess,
-        prophetNum: prophetNum.toString(),
-        eventData: event,
-      };
-      console.log(JSON.stringify(smiteEvent, null, 4));
-      const targetName =
-        prophetNames[getPlayerNameArrayNum(prophetNum, firstAddress)];
-      if (isSuccess) {
-        lastAction[prophetNum.toNumber()].action =
-          `Successful Smite of ${targetName}`;
-      } else {
-        lastAction[prophetNum.toNumber()].action =
-          `Failed to Smite ${targetName}`;
-      }
-
-      populateProphets();
-    });
-  }
+          populateProphets();
+        }
+      );
+    }
+  });
 }
 
 async function populateProphets() {
