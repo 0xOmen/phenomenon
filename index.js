@@ -3,10 +3,10 @@ import { ethers } from "./ethers-5.6.esm.min.js";
 import { abi, contractAddress, hardhatWETHAddr } from "./constants.js";
 import { erc20_abi } from "./erc20-abi.js";
 
-const webSocketProvider = new ethers.providers.WebSocketProvider(
+/*const webSocketProvider = new ethers.providers.WebSocketProvider(
   "wss://base-mainnet.g.alchemy.com/v2/jPdfaZPC-HsogX6z4yEpViscL-B2TuvC"
 );
-const wsContract = new ethers.Contract(contractAddress, abi, webSocketProvider);
+const wsContract = new ethers.Contract(contractAddress, abi, webSocketProvider);*/
 const customHttpProvider = new ethers.providers.JsonRpcProvider(
   "https://base-mainnet.g.alchemy.com/v2/jPdfaZPC-HsogX6z4yEpViscL-B2TuvC"
 );
@@ -286,15 +286,23 @@ async function populateProphets() {
     let prophetOutput = "";
     let _priestData = "";
 
-    let currentTurn, targets, prophetNumNameNum, currentTurnNameNum, nameOfTurn;
+    let currentTurn,
+      targets,
+      prophetNumNameNum,
+      currentTurnNameNum,
+      nameOfTurn,
+      numberOfProphets;
     const gameStatus = await customRPCContract.gameStatus();
     const totalTickets = await customRPCContract.totalTickets();
     const tokenBalance = await customRPCContract.tokenBalance();
     const game_number = await customRPCContract.s_gameNumber();
     document.getElementById("gameNumber").innerHTML =
       `Current Game Number: ${game_number}`;
-    const numberOfProphets = await customRPCContract.NUMBER_OF_PROPHETS();
-    updateButtons(gameStatus, false, numberOfProphets);
+
+    if (gameStatus == 0) {
+      numberOfProphets = await customRPCContract.prophetsRemaining();
+    } else numberOfProphets = await customRPCContract.NUMBER_OF_PROPHETS();
+    updateButtons(gameStatus, false);
     try {
       for (let prophetNum = 0; prophetNum < numberOfProphets; prophetNum++) {
         let prophet;
@@ -329,7 +337,7 @@ async function populateProphets() {
           if (prophet[0] == userAddress) {
             playerNumber = prophetNum;
             playerName = `You are ${prophetNames[prophetNumNameNum]}`;
-            updateButtons(gameStatus, true, numberOfProphets);
+            updateButtons(gameStatus, true);
             //updatePriestButton();
             if (currentTurn == prophetNum && gameStatus == 1) {
               playerName += ` and it is your turn`;
@@ -617,24 +625,11 @@ async function startGame() {
   }
 }
 
-async function updateButtons(gameStatus, entered, numOfProphets) {
-  let filled;
-
+async function updateButtons(gameStatus, entered) {
   if (gameStatus == 0) {
-    try {
-      filled = await customRPCContract.prophets(numOfProphets - 1);
-    } catch (error) {
-      console.log(error);
-    }
-    console.log(`filled = ${filled}`);
-    if (filled != null) {
-      console.log("entered start Game");
-      startGameButton.classList.remove("hidden");
-    } else {
-      if (!entered) enterGameButton.classList.remove("hidden");
-      else enterGameButton.classList.add("hidden");
-    }
-  } else if (gameStatus == 1) {
+    if (!entered) enterGameButton.classList.remove("hidden");
+    else enterGameButton.classList.add("hidden");
+  } else {
     enterGameButton.classList.add("hidden");
     startGameButton.classList.add("hidden");
   }
