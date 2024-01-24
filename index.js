@@ -2,6 +2,11 @@
 import { ethers } from "./ethers-5.6.esm.min.js";
 import { abi, contractAddress, hardhatWETHAddr } from "./constants.js";
 import { erc20_abi } from "./erc20-abi.js";
+
+const webSocketProvider = new ethers.providers.WebSocketProvider(
+  "wss://base-mainnet.g.alchemy.com/v2/jPdfaZPC-HsogX6z4yEpViscL-B2TuvC"
+);
+const wsContract = new ethers.Contract(contractAddress, abi, webSocketProvider);
 const customHttpProvider = new ethers.providers.JsonRpcProvider(
   "https://base-mainnet.g.alchemy.com/v2/jPdfaZPC-HsogX6z4yEpViscL-B2TuvC"
 );
@@ -186,7 +191,7 @@ async function checkAndSetAllowance(
 
 async function listenForEvents() {
   if (typeof window.ethereum != undefined) {
-    customRPCContract.on(
+    wsContract.on(
       "accusation",
       (isSuccess, targetIsAlive, prophetNum, target, event) => {
         let accusationEvent = {
