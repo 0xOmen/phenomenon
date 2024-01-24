@@ -85,6 +85,7 @@ avatarImage.innerHTML = "Connect MetaMask";
 window.onload = (event) => {
   populateProphets();
   isConnected();
+  listenForEvents();
 };
 
 async function isConnected() {
@@ -102,7 +103,7 @@ async function isConnected() {
         0,
         6
       )}...${accounts[0].substring(38, 43)} Connected`;
-      listenForEvents();
+      //listenForEvents();
     } else {
       console.log("Metamask is not connected");
     }
@@ -125,7 +126,7 @@ async function connect() {
       )}...${userAddress.substring(38, 43)} Connected`;
       connectButton.innerHTML = accountConnected;
       console.log("Metamask connected");
-      listenForEvents();
+      //listenForEvents();
       populateProphets();
     } else connectButton.innerHTML = "Change Network to Base";
   } else {
@@ -237,7 +238,7 @@ async function listenForEvents() {
     }
   );
 
-  wsContract.on("miracleAttempted", (isSuccess, prophetNum, event) => {
+  customRPCContract.on("miracleAttempted", (isSuccess, prophetNum, event) => {
     let miracleEvent = {
       success: isSuccess,
       prophetNum: prophetNum.toString(),
