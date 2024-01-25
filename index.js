@@ -404,7 +404,7 @@ async function populateProphets() {
           const allegianceName = prophetNames[allegianceNameNum];
           playerName += ` and you own ${ticketsOwned} tickets of ${allegianceName}`;
           const target = `<option value="${allegiantTo}">${allegianceName}</option>"`;
-          ticketManagementVisible(target, true);
+          ticketManagementVisible(targets, true);
         }
       } else if (gameStatus == 1) updatePriestButton();
       tableData.innerHTML = prophetOutput;
@@ -430,7 +430,7 @@ async function populateProphets() {
 
 async function ticketManagementVisible(priests, canSell) {
   buyTicketsButton.classList.remove("hidden");
-  if (canSell) sellTicketsButton.classList.remove("hidden");
+  //if (canSell) sellTicketsButton.classList.remove("hidden");
   ticketNames.classList.remove("hidden");
   ticketNames.innerHTML = priests;
 }
@@ -507,8 +507,9 @@ async function sellTicketTransaction() {
   if (typeof window.ethereum != undefined) {
     console.log(`Selling ${numTickets} Tickets`);
     try {
+      /*
       const sellTx = await contract.loseReligion(numTickets);
-      await sellTx.wait();
+      await sellTx.wait();*/
       closeModal();
     } catch (error) {
       console.log(error);
