@@ -8,7 +8,8 @@ import { erc20_abi } from "./erc20-abi.js";
 );
 const wsContract = new ethers.Contract(contractAddress, abi, webSocketProvider);*/
 const customHttpProvider = new ethers.providers.JsonRpcProvider(
-  "https://base-mainnet.g.alchemy.com/v2/jPdfaZPC-HsogX6z4yEpViscL-B2TuvC"
+  //"https://base-mainnet.g.alchemy.com/v2/jPdfaZPC-HsogX6z4yEpViscL-B2TuvC"
+  "https://rpc.ankr.com/base"
 );
 let customRPCContract = new ethers.Contract(
   contractAddress,
@@ -264,7 +265,7 @@ async function listenForEvents() {
       };
       console.log(JSON.stringify(smiteEvent, null, 4));
       const targetName =
-        prophetNames[getPlayerNameArrayNum(prophetNum, firstAddress)];
+        prophetNames[getPlayerNameArrayNum(target.toNumber(), firstAddress)];
       if (isSuccess) {
         lastAction[prophetNum.toNumber()].action =
           `Successful Smite of ${targetName}`;
@@ -448,7 +449,7 @@ async function buyTicketModalUpdate() {
   console.log(nextTicketPrice);
   ticketPrice.innerHTML = `Next ticket price is ${ethers.utils.formatEther(
     nextTicketPrice
-  )} tokens`;
+  )} DEGEN`;
   ticketModal.classList.remove("hidden");
   buyTrxButton.classList.remove("hidden");
   overlay.classList.remove("hidden");
