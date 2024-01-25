@@ -303,6 +303,7 @@ async function populateProphets() {
       numberOfProphets = await customRPCContract.prophetsRemaining();
     } else numberOfProphets = await customRPCContract.NUMBER_OF_PROPHETS();
     updateButtons(gameStatus, false);
+    if (userAddress == null) userAddress = ethers.constants.AddressZero;
     try {
       for (let prophetNum = 0; prophetNum < numberOfProphets; prophetNum++) {
         let prophet;
@@ -385,26 +386,30 @@ async function populateProphets() {
       if (playerName == "You are not currently a prophet" && gameStatus == 1) {
         nameOfTurn = prophetNames[currentTurnNameNum];
         updateForceButton(nameOfTurn);
-        const ticketsOwned = await customRPCContract.ticketsToValhalla(
-          game_number,
-          userAddress
-        );
-        if (ticketsOwned == 0) {
-          playerName += ` and you own ${ticketsOwned} tickets`;
-          ticketManagementVisible(targets, false);
+        if (userAddress == ethers.constants.AddressZero) {
+          playerName = "Wallet not connected";
         } else {
-          const allegiantTo = await customRPCContract.allegiance(
+          const ticketsOwned = await customRPCContract.ticketsToValhalla(
             game_number,
             userAddress
           );
-          const allegianceNameNum = getPlayerNameArrayNum(
-            allegiantTo,
-            firstAddress
-          );
-          const allegianceName = prophetNames[allegianceNameNum];
-          playerName += ` and you own ${ticketsOwned} tickets of ${allegianceName}`;
-          const target = `<option value="${allegiantTo}">${allegianceName}</option>"`;
-          ticketManagementVisible(targets, true);
+          if (ticketsOwned == 0) {
+            playerName += ` and you own ${ticketsOwned} tickets`;
+            ticketManagementVisible(targets, false);
+          } else {
+            const allegiantTo = await customRPCContract.allegiance(
+              game_number,
+              userAddress
+            );
+            const allegianceNameNum = getPlayerNameArrayNum(
+              allegiantTo,
+              firstAddress
+            );
+            const allegianceName = prophetNames[allegianceNameNum];
+            playerName += ` and you own ${ticketsOwned} tickets of ${allegianceName}`;
+            const target = `<option value="${allegiantTo}">${allegianceName}</option>"`;
+            ticketManagementVisible(targets, true);
+          }
         }
       } else if (gameStatus == 1) updatePriestButton();
       tableData.innerHTML = prophetOutput;
