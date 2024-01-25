@@ -8,7 +8,8 @@ import { erc20_abi } from "./erc20-abi.js";
 );
 const wsContract = new ethers.Contract(contractAddress, abi, webSocketProvider);*/
 const customHttpProvider = new ethers.providers.JsonRpcProvider(
-  "https://base-mainnet.g.alchemy.com/v2/jPdfaZPC-HsogX6z4yEpViscL-B2TuvC"
+  "https://rpc.ankr.com/base/9c8d3029944ec1cd0bf43c88f6a04b47cf88d9b125abb82c6ce347a42d3a5cc1"
+  //"https://base-mainnet.g.alchemy.com/v2/jPdfaZPC-HsogX6z4yEpViscL-B2TuvC"
   //"https://rpc.ankr.com/base"
 );
 let customRPCContract = new ethers.Contract(
