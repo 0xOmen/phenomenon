@@ -1,6 +1,6 @@
 //import ethers from "front end file"
 import { ethers } from "./ethers-5.6.esm.min.js";
-import { abi, contractAddress, hardhatWETHAddr } from "./constants.js";
+import { abi, contractAddress, baseDegenAddr } from "./constants.js";
 import { erc20_abi } from "./erc20-abi.js";
 
 /*const webSocketProvider = new ethers.providers.WebSocketProvider(
@@ -142,7 +142,7 @@ async function enterGame() {
     try {
       await checkAndSetAllowance(
         signer,
-        hardhatWETHAddr,
+        baseDegenAddr,
         contractAddress,
         ethers.utils.parseEther("10000")
       );
@@ -476,12 +476,12 @@ async function buyTicketTransaction() {
   const prophetNum = document.getElementById("ticketNames").value;
   const accolites = await customRPCContract.accolites(prophetNum);
   const totalPrice = await customRPCContract.getPrice(accolites, numTickets);
-  console.log(`Checking erc20 allowance of ${hardhatWETHAddr}`);
+  console.log(`Checking erc20 allowance of ${baseDegenAddr}`);
   if (typeof window.ethereum != undefined) {
     try {
       await checkAndSetAllowance(
         signer,
-        hardhatWETHAddr,
+        baseDegenAddr,
         contractAddress,
         totalPrice
       );

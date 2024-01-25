@@ -1,5 +1,5 @@
 export const contractAddress = "0x2dA1405B67A4C240b7e72C47AB6B9f53048cb978";
-export const hardhatWETHAddr = "0x4ed4E862860beD51a9570b96d89aF5E1B0Efefed";
+export const baseDegenAddr = "0x4ed4E862860beD51a9570b96d89aF5E1B0Efefed";
 export const abi = [
   {
     inputs: [
