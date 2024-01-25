@@ -14,6 +14,11 @@ export const abi = [
         type: "uint256",
       },
       {
+        internalType: "uint256",
+        name: "_ticketMultiplier",
+        type: "uint256",
+      },
+      {
         internalType: "uint16",
         name: "_numProphets",
         type: "uint16",
@@ -142,12 +147,38 @@ export const abi = [
   {
     inputs: [
       {
+        internalType: "uint256",
+        name: "newFee",
+        type: "uint256",
+      },
+    ],
+    name: "changeEntryFee",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "address",
         name: "newOwner",
         type: "address",
       },
     ],
     name: "changeOwner",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "newMultiplier",
+        type: "uint256",
+      },
+    ],
+    name: "changeTicketMultiplier",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -247,6 +278,19 @@ export const abi = [
       {
         indexed: true,
         internalType: "uint256",
+        name: "newGameNumber",
+        type: "uint256",
+      },
+    ],
+    name: "gameReset",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
         name: "gameNumber",
         type: "uint256",
       },
@@ -286,19 +330,6 @@ export const abi = [
       },
     ],
     name: "highPriest",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_ticketsToSell",
-        type: "uint256",
-      },
-    ],
-    name: "loseReligion",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -600,7 +631,7 @@ export const abi = [
         type: "uint256",
       },
     ],
-    stateMutability: "pure",
+    stateMutability: "view",
     type: "function",
   },
   {
