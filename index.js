@@ -559,6 +559,7 @@ const prophetImage = [
 
 function getProphetData(
   prophet,
+  playerAddress,
   prophetNum,
   accolites,
   highPriests,
@@ -607,6 +608,7 @@ function getProphetData(
 
   const answer = `<tr style="background-color: ${color}; outline: ${border}">
             <td><img src=${avatar} width="40" height="40" ></img></td>
+            <td style="text-align: center; padding-right: 5px; padding-left: 5px"> ${playerAddress} </td>
             <td style="text-align: center; padding-right: 5px; padding-left: 5px"> ${prophetName} </td>
             <td style="text-align: center; padding-right: 5px; padding-left: 5px"> ${prophetStatus} </td>
             <td style="text-align: center; padding-right: 5px; padding-left: 5px">  ${accolites}  </td>
