@@ -328,10 +328,7 @@ async function populateProphets() {
             highPriests =
               await customRPCContract.highPriestsByProphet(prophetNum);
           }
-          const playerAddress = `${prophet[0].substring(
-            0,
-            6
-          )}...${prophet[0].substring(38, 43)}`;
+          const playerAddress = `${prophet[0].substring(0, 8)}`;
           prophetOutput += getProphetData(
             prophet,
             playerAddress,
